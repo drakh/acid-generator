@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "1.9.5",
+    "lodash": "4.17.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "8.1.1",
     "tone": "14.7.77"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.196",
     "@types/node": "16.11.7",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
@@ -25,9 +27,9 @@
     "@typescript-eslint/parser": "5.61.0",
     "@vitejs/plugin-react": "4.0.1",
     "eslint": "8.44.0",
-    "eslint-plugin-react-hooks": "4.6.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.1",
     "prettier": "2.5.1",
     "typescript": "5.0.2",

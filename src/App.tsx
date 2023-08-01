@@ -1,45 +1,32 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { start, /*MonoSynth,*/ Transport } from 'tone';
+import { FC } from 'react';
+import { useSelector } from 'react-redux';
 import './App.css';
+import { type State } from './store.ts';
 
-const App: FC<never> = () => {
-  // const synth = useRef(new MonoSynth().toDestination());
-  const transport = useRef(Transport);
-  const started = useRef(false);
+interface Props {
+  currentStep: number;
+  onStartClick: () => void;
+}
 
-  const [currentStep, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!started.current) {
-      started.current = true;
-      transport.current.set({ bpm: 90 });
-      let step = 0;
-      transport.current.scheduleRepeat(() => {
-        step = step + 1;
-        setStep(step);
-        return transport.current.position;
-      }, '16n');
-    }
-  }, [transport, started, setStep]);
-
-  const toggleTransport = useCallback(async () => {
-    try {
-      await start();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      transport.current.toggle();
-    }
-  }, [transport]);
-
+const App: FC<Props> = ({ currentStep, onStartClick }) => {
   return (
     <main>
-      <header>Vite + React</header>
+      <header>ACIED</header>
       <div className="card">
-        <button onClick={toggleTransport}>{currentStep}</button>
+        <button onClick={onStartClick}>{currentStep}</button>
       </div>
     </main>
   );
 };
 
-export default App;
+const ConnectedApp: FC<Pick<Props, 'onStartClick'>> = ({ onStartClick }) => {
+  const {
+    steps: { currentStep },
+  } = useSelector((state: State) => {
+    return state;
+  });
+
+  return <App currentStep={currentStep} onStartClick={onStartClick} />;
+};
+
+export default ConnectedApp;
