@@ -1,16 +1,18 @@
 import { createSlice, configureStore, type PayloadAction } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
+import { generate, SequenceStep } from './audio-engine/generator';
 
 export interface State {
-  steps: {
+  sequencer: {
     currentStep: number;
     maxSteps: number;
   };
+  pattern: SequenceStep[];
 }
 
-const slice = createSlice({
+const sequencerSlice = createSlice({
   name: 'steps',
-  initialState: { currentStep: 0, maxSteps: 16 },
+  initialState: { currentStep: -1, maxSteps: 16 },
   reducers: {
     setStep: (state, action: PayloadAction<number>) => {
       return {
@@ -23,15 +25,31 @@ const slice = createSlice({
 
 const {
   actions: { setStep },
-  reducer,
-} = slice;
+  reducer: sequencerReducer,
+} = sequencerSlice;
+
+const patternSlice = createSlice({
+  name: 'pattern',
+  initialState: generate(16),
+  reducers: {
+    setPattern: (_state, action: PayloadAction<SequenceStep[]>) => {
+      return action.payload;
+    },
+  },
+});
+
+const {
+  actions: { setPattern },
+  reducer: patternReducer,
+} = patternSlice;
 
 const combinedReducer = combineReducers({
-  steps: reducer,
+  sequencer: sequencerReducer,
+  pattern: patternReducer,
 });
 
 const store = configureStore<State>({
   reducer: combinedReducer,
 });
 
-export { store, setStep };
+export { store, setStep, setPattern };

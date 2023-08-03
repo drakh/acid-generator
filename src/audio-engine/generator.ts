@@ -2,7 +2,7 @@ import { random } from 'lodash';
 import { Unit } from 'tone';
 import { getPattern } from 'euclidean-rhythms';
 import { arrayRand } from '../utils';
-import { SCALE, SCALES } from './scales';
+import { DEFAUL_SCALE } from './scales';
 
 type Octave = -1 | 0 | 1;
 
@@ -13,11 +13,11 @@ export interface SequenceStep<T = Unit.Note | null> {
   slide: T extends null ? T : boolean;
 }
 
-const generate = (seqLength: number, scale = SCALES[SCALE.PHRYGIAN]): SequenceStep[] => {
+const generate = (seqLength: number, scale = DEFAUL_SCALE): SequenceStep[] => {
   const elements = Array(seqLength)
     .fill(0)
     .map((_v, i) => i);
-  const notesToGenerate = random(1, seqLength);
+  const notesToGenerate = random(Math.floor(seqLength / 2), seqLength);
   const selectedSteps = arrayRand(elements, notesToGenerate);
   const accents = arrayRand(selectedSteps, random(0, notesToGenerate));
   const slides = arrayRand(selectedSteps, random(0, notesToGenerate));

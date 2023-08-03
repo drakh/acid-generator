@@ -1,0 +1,29 @@
+ul {
+  &.pattern {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    justify-content: space-between;
+    background-color: rgba(1, 1, 1, 0.5);
+
+    li {
+
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      &.step {
+        border: 1px dashed #252510;
+        &.active {
+          border: 1px solid #f00;
+          background-color: #242424;
+        }
+      }
+    }
+  }
+}
+

@@ -3,9 +3,9 @@ import { tb303 } from './synth';
 import { store, setStep, setPattern } from '../store';
 import { generate } from './generator';
 
-Transport.set({ bpm: 90 });
+Transport.set({ bpm: 60 });
 
-const BASE_NOTE = 36;
+const BASE_NOTE = 48;
 
 const toggleTransport = async () => {
   try {

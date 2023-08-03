@@ -43,3 +43,5 @@ export const SCALES: ScaleDef = {
   [SCALE.SPANISH]: [0, 1, 4, 5, 7, 9, 10],
   [SCALE.BHAIRAV]: [0, 1, 4, 5, 7, 8, 11],
 };
+
+export const DEFAUL_SCALE = SCALES[SCALE.PHRYGIAN];

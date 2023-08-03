@@ -1,3 +1,10 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+}
+
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -26,15 +33,7 @@ a:hover {
 
 body {
     margin: 0;
-    display: flex;
     place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-}
-
-h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
 }
 
 button {
@@ -58,6 +57,10 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
+section, main {
+    width: 100%;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;
@@ -71,4 +74,9 @@ button:focus-visible {
     button {
         background-color: #f9f9f9;
     }
+}
+
+ul, li {
+    padding: 0;
+    margin: 0;
 }

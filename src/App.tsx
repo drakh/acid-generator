@@ -1,32 +1,33 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { toggleTransport } from './audio-engine/controls';
+import { type State } from './store';
+import Pattern from './components/Pattern.tsx';
+
 import './App.css';
-import { type State } from './store.ts';
 
-interface Props {
-  currentStep: number;
-  onStartClick: () => void;
-}
+const App: FC = () => {
+  const {
+    sequencer: { currentStep },
+    pattern,
+  } = useSelector((state: State) => {
+    return state;
+  });
+  const onStartClick = useCallback(() => {
+    void toggleTransport();
+  }, []);
 
-const App: FC<Props> = ({ currentStep, onStartClick }) => {
   return (
     <main>
       <header>ACIED</header>
-      <div className="card">
+      <section>
         <button onClick={onStartClick}>{currentStep}</button>
-      </div>
+      </section>
+      <section>
+        <Pattern pattern={pattern} currentStep={currentStep} />
+      </section>
     </main>
   );
 };
 
-const ConnectedApp: FC<Pick<Props, 'onStartClick'>> = ({ onStartClick }) => {
-  const {
-    steps: { currentStep },
-  } = useSelector((state: State) => {
-    return state;
-  });
-
-  return <App currentStep={currentStep} onStartClick={onStartClick} />;
-};
-
-export default ConnectedApp;
+export default App;
