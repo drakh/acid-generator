@@ -1,22 +1,19 @@
 import { random } from 'lodash';
-import { Frequency, Time, Unit } from 'tone';
-import { arrayRand } from '../utils.ts';
-import { SCALE, SCALES } from './scales.ts';
+import { Unit } from 'tone';
+import { getPattern } from 'euclidean-rhythms';
+import { arrayRand } from '../utils';
+import { SCALE, SCALES } from './scales';
 
 type Octave = -1 | 0 | 1;
 
 export interface SequenceStep<T = Unit.Note | null> {
-  note: T extends null ? null : Unit.Note;
-  len: T extends null ? null : Unit.Time;
-  velocity: T extends null ? null : number;
-  octave: T extends null ? null : Octave;
+  note: T extends null ? T : number;
+  octave: T extends null ? T : Octave;
+  accent: T extends null ? T : boolean;
+  slide: T extends null ? T : boolean;
 }
 
-const generate = (
-  seqLength: number,
-  baseNote = 33,
-  scale = SCALES[SCALE.PHRYGIAN],
-): SequenceStep[] => {
+const generate = (seqLength: number, scale = SCALES[SCALE.PHRYGIAN]): SequenceStep[] => {
   const elements = Array(seqLength)
     .fill(0)
     .map((_v, i) => i);
@@ -33,24 +30,25 @@ const generate = (
     if (!selectedSteps.includes(v) || selectedSteps.length === 0) {
       return {
         note: null,
-        velocity: null,
-        len: null,
         octave: null,
+        accent: null,
+        slide: null,
       };
     }
     const octave = random(-1, 1) as Octave;
-    const scaleNote =
+    const note =
       randNotes.includes(v) && selectedNotes.length > 0
         ? selectedNotes[random(0, selectedNotes.length - 1)]
         : 0;
-    const note = Frequency(baseNote + scaleNote + 12 * octave, 'midi').toNote();
     return {
       note,
       octave,
-      velocity: accents.includes(v) ? 0.7 : 0.3,
-      len: Time('16n').toSeconds() * (slides.includes(v) ? 1.25 : 0.4),
+      accent: accents.includes(v),
+      slide: slides.includes(v),
     };
   });
+  const p = getPattern(7, 16);
+  console.info({ p });
   return out;
 };
 
