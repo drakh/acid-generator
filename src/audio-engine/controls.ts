@@ -4,11 +4,11 @@ import { store } from '../store';
 import { setStep, setPlaying, setTempo } from '../store/transport';
 import { setPattern } from '../store/sequencer';
 import { generate } from './generator';
-import { BASE_TEMPO } from '../constants';
+import { DEFAULT_TEMPO } from '../constants';
 
 const { dispatch } = store;
 
-Transport.set({ bpm: BASE_TEMPO });
+Transport.set({ bpm: DEFAULT_TEMPO });
 
 const changeTempo = (bpm: number) => {
   Transport.set({ bpm });
