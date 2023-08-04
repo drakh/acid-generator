@@ -1,21 +1,21 @@
 import { type FC } from 'react';
 import { type SequenceStep } from '../audio-engine/generator';
 import PianoRoll from './PianoRoll';
-import { type Scale } from '../audio-engine/scales';
+import { type SCALE } from '../audio-engine/scales';
 
 import styles from './Pattern.module.less';
 
-const Pattern: FC<{ pattern: SequenceStep[]; currentStep: number; scale: Scale }> = ({
+const Pattern: FC<{ pattern: SequenceStep[]; currentStep: number; scaleName: SCALE }> = ({
   pattern,
   currentStep,
-  scale,
+  scaleName,
 }) => {
   return (
     <ul className={styles.pattern}>
       <li className={styles.step}>
         <ul>
           <li>
-            <PianoRoll note={null} scale={scale} />
+            <PianoRoll note={null} scaleName={scaleName} />
           </li>
           <li className={styles.cell}>O</li>
           <li className={styles.cell}>S</li>
@@ -30,7 +30,7 @@ const Pattern: FC<{ pattern: SequenceStep[]; currentStep: number; scale: Scale }
           >
             <ul>
               <li>
-                <PianoRoll note={note} scale={scale} />
+                <PianoRoll note={note} scaleName={scaleName} />
               </li>
               <li className={styles.cell}>{`${
                 octave === 1 ? 'UP' : octave === -1 ? 'DW' : ''

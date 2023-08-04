@@ -36,7 +36,7 @@ const App: FC = () => {
       />
       <GeneratorControls />
       <section>
-        <Pattern pattern={pattern} currentStep={currentStep} scale={scale} />
+        <Pattern pattern={pattern} currentStep={currentStep} scaleName={scale} />
       </section>
     </main>
   );

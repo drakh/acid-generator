@@ -1,8 +1,8 @@
-import { SCALE, SCALES } from './audio-engine/scales.ts';
+import { SCALE } from './audio-engine/scales.ts';
 
 const BASE_TEMPO = 120;
 const BASE_NOTE = 48;
-const DEFAUL_SCALE = SCALES[SCALE.PHRYGIAN];
+const DEFAUL_SCALE = SCALE.PHRYGIAN;
 const BPM = {
   MIN: 30,
   MAX: 240,

@@ -3,6 +3,7 @@ import { type Unit } from 'tone';
 // import { getPattern } from 'euclidean-rhythms';
 import { arrayRand } from '../utils';
 import { DEFAUL_SCALE } from '../constants';
+import { SCALES } from './scales';
 
 type Octave = -1 | 0 | 1;
 
@@ -13,7 +14,7 @@ export interface SequenceStep<T extends Unit.Note | null = Unit.Note | null> {
   slide: T extends null ? T : boolean;
 }
 
-const generate = (seqLength: number, scale = DEFAUL_SCALE): SequenceStep[] => {
+const generate = (seqLength: number, scaleName = DEFAUL_SCALE): SequenceStep[] => {
   const elements = Array(seqLength)
     .fill(0)
     .map((_v, i) => i);
@@ -23,6 +24,7 @@ const generate = (seqLength: number, scale = DEFAUL_SCALE): SequenceStep[] => {
   const slides = arrayRand(selectedSteps, random(0, notesToGenerate));
   const randNotes = arrayRand(selectedSteps, random(0, notesToGenerate));
 
+  const scale = SCALES[scaleName];
   const spread = random(0, scale.length - 1);
   const selectedNotes = arrayRand(scale, spread);
 

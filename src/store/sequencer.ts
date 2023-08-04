@@ -6,16 +6,24 @@ import {
 } from '@reduxjs/toolkit';
 import { generate, type SequenceStep } from '../audio-engine/generator';
 import { BASE_NOTE, DEFAUL_SCALE } from '../constants';
-import { type Scale } from '../audio-engine/scales';
+import { type SCALE } from '../audio-engine/scales';
+import { storage } from '../localStorage.ts';
+
+const { sequencer = {} } = storage;
 
 interface State {
   pattern: SequenceStep[];
   options: {
-    maxSteps: number;
+    seqLength: number;
     baseNote: number;
-    scale: Scale;
+    scale: SCALE;
   };
 }
+
+const initialState: State = {
+  pattern: generate(16),
+  options: { seqLength: 16, baseNote: BASE_NOTE, scale: DEFAUL_SCALE },
+};
 
 interface Reducers extends SliceCaseReducers<State> {
   setPattern: CaseReducer<State, PayloadAction<SequenceStep[]>>;
@@ -25,8 +33,8 @@ interface Reducers extends SliceCaseReducers<State> {
 const slice = createSlice<State, Reducers>({
   name: 'pattern',
   initialState: {
-    pattern: generate(16),
-    options: { maxSteps: 16, baseNote: BASE_NOTE, scale: DEFAUL_SCALE },
+    ...initialState,
+    ...sequencer,
   },
   reducers: {
     setPattern: (state, { payload }) => {
@@ -41,7 +49,7 @@ const slice = createSlice<State, Reducers>({
         ...state,
         options: {
           ...options,
-          maxSteps: payload,
+          seqLength: payload,
         },
       };
     },

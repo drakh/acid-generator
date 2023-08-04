@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { SCALE, SCALES } from '../audio-engine/scales';
 
 import styles from './PianoRoll.module.less';
@@ -7,7 +7,11 @@ const OCTAVE = 12;
 const NOTES = Array(OCTAVE).fill(1);
 const WHITE_KEYS = SCALES[SCALE.MAJOR];
 
-const PianoRoll: FC<{ note: number | null; scale: number[] }> = ({ note, scale }) => {
+const PianoRoll: FC<{ note: number | null; scaleName: SCALE }> = ({
+  note,
+  scaleName,
+}) => {
+  const scale = SCALES[scaleName];
   return (
     <ul className={styles.pianoRoll}>
       {NOTES.map((_v, i) => {

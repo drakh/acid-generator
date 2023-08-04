@@ -36,11 +36,11 @@ Transport.scheduleRepeat(() => {
     transport: { currentStep: oldStep },
     sequencer: {
       pattern,
-      options: { maxSteps, baseNote },
+      options: { seqLength, baseNote },
     },
   } = store.getState();
 
-  const currentStep = oldStep + 1 >= maxSteps ? 0 : oldStep + 1;
+  const currentStep = oldStep + 1 >= seqLength ? 0 : oldStep + 1;
 
   if (currentStep < pattern.length) {
     const { note, accent, slide, octave } = pattern[currentStep];
