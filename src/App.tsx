@@ -1,30 +1,42 @@
-import { FC, useCallback } from 'react';
+import { type FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { toggleTransport } from './audio-engine/controls';
 import { type State } from './store';
-import Pattern from './components/Pattern.tsx';
+import { changeTempo, toggleTransport } from './audio-engine/controls';
+import Pattern from './components/Pattern';
+import PlayControls from './components/PlayControls';
+import GeneratorControls from './components/GeneratorControls';
 
 import './App.css';
 
 const App: FC = () => {
   const {
-    sequencer: { currentStep },
-    pattern,
+    transport: { currentStep, tempo, playing },
+    sequencer: {
+      pattern,
+      options: { scale },
+    },
   } = useSelector((state: State) => {
     return state;
   });
-  const onStartClick = useCallback(() => {
+
+  const togglePlay = useCallback(() => {
     void toggleTransport();
   }, []);
+
+  const handleTempoChange = useCallback((bpm: number) => changeTempo(bpm), []);
 
   return (
     <main>
       <header>ACIED</header>
+      <PlayControls
+        onPlayClick={togglePlay}
+        tempo={tempo}
+        onTempoChange={handleTempoChange}
+        playing={playing}
+      />
+      <GeneratorControls />
       <section>
-        <button onClick={onStartClick}>{currentStep}</button>
-      </section>
-      <section>
-        <Pattern pattern={pattern} currentStep={currentStep} />
+        <Pattern pattern={pattern} currentStep={currentStep} scale={scale} />
       </section>
     </main>
   );

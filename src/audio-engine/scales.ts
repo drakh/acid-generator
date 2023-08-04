@@ -19,8 +19,10 @@ export enum SCALE {
   BHAIRAV = 'BHAIRAV',
 }
 
+export type Scale = [number, number, number, number, number, number, number];
+
 export type ScaleDef = {
-  [k in SCALE]: [number, number, number, number, number, number, number];
+  [k in SCALE]: Scale;
 };
 
 export const SCALES: ScaleDef = {
@@ -43,5 +45,3 @@ export const SCALES: ScaleDef = {
   [SCALE.SPANISH]: [0, 1, 4, 5, 7, 9, 10],
   [SCALE.BHAIRAV]: [0, 1, 4, 5, 7, 8, 11],
 };
-
-export const DEFAUL_SCALE = SCALES[SCALE.PHRYGIAN];

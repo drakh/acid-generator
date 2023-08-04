@@ -1,12 +1,12 @@
 import { random } from 'lodash';
-import { Unit } from 'tone';
-import { getPattern } from 'euclidean-rhythms';
+import { type Unit } from 'tone';
+// import { getPattern } from 'euclidean-rhythms';
 import { arrayRand } from '../utils';
-import { DEFAUL_SCALE } from './scales';
+import { DEFAUL_SCALE } from '../constants';
 
 type Octave = -1 | 0 | 1;
 
-export interface SequenceStep<T = Unit.Note | null> {
+export interface SequenceStep<T extends Unit.Note | null = Unit.Note | null> {
   note: T extends null ? T : number;
   octave: T extends null ? T : Octave;
   accent: T extends null ? T : boolean;
@@ -33,7 +33,7 @@ const generate = (seqLength: number, scale = DEFAUL_SCALE): SequenceStep[] => {
         octave: null,
         accent: null,
         slide: null,
-      };
+      } as SequenceStep<null>;
     }
     const octave = random(-1, 1) as Octave;
     const note =
@@ -45,10 +45,10 @@ const generate = (seqLength: number, scale = DEFAUL_SCALE): SequenceStep[] => {
       octave,
       accent: accents.includes(v),
       slide: slides.includes(v),
-    };
+    } as SequenceStep<Unit.Note>;
   });
-  const p = getPattern(7, 16);
-  console.info({ p });
+  // const p = getPattern(7, 16);
+  // console.info({ p });
   return out;
 };
 
