@@ -25,5 +25,9 @@ module.exports = {
       { allowConstantExport: true },
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      { prefer: 'type-imports', fixStyle: 'inline-type-imports' }
+    ]
   },
 };
