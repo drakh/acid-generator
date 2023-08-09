@@ -1,12 +1,12 @@
 import { type FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { type State } from './store';
+
+import './App.less';
 import { changeTempo, toggleTransport } from './audio-engine/controls';
+import GeneratorControls from './components/GeneratorControls';
 import Pattern from './components/Pattern';
 import PlayControls from './components/PlayControls';
-import GeneratorControls from './components/GeneratorControls';
-
-import './App.css';
+import { type State } from './types';
 
 const App: FC = () => {
   const {
@@ -27,7 +27,6 @@ const App: FC = () => {
 
   return (
     <main>
-      <header>ACIED</header>
       <PlayControls
         onPlayClick={togglePlay}
         tempo={tempo}

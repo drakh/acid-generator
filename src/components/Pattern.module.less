@@ -1,29 +1,49 @@
+@import "../colors";
+
 ul {
-  &.pattern {
-    display: grid;
-    grid-auto-columns: 1fr;
-    grid-auto-flow: column;
+  padding: 0;
+  margin: 0;
+
+  li {
     list-style: none;
     padding: 0;
     margin: 0;
-    width: 100%;
-    justify-content: space-between;
-    background-color: rgba(1, 1, 1, 0.5);
+  }
+}
 
-    li {
+&.pattern {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 
-      list-style: none;
-      padding: 0;
-      margin: 0;
+  .step {
+    flex: 2;
+    border: 1px solid @gray--30;
+    background-color: @gray--100;
 
-      &.step {
-        border: 1px dashed #252510;
-        &.active {
-          border: 1px solid #f00;
-          background-color: #242424;
-        }
+    &.active {
+      border: 1px solid @yellow--50;
+      box-shadow: inset 0 0 5px 0 @yellow--50;
+    }
+
+    &:first-of-type {
+      flex: 1;
+    }
+
+    .cell {
+      height: 1.4rem;
+      line-height: 1.4rem;
+      border-bottom: 1px solid rgba(@gray--30, 0.5);
+      position: relative;
+
+      &.slide, &.accent {
+        border-radius: 4px;
+        box-shadow: inset 0 0 4px 0 rgba(@red--80, 0.5);
+        background-color: rgba(@red--50, 0.8);
       }
     }
   }
 }
-

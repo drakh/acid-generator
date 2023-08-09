@@ -1,7 +1,7 @@
-import { type FC, useCallback } from 'react';
-import { SlControlPlay, SlControlPause } from 'react-icons/sl';
-import { Knob, type KnobProps } from 'primereact/knob';
-import { BPM } from '../constants.ts';
+import { type FC } from 'react';
+import { SlControlPause, SlControlPlay } from 'react-icons/sl';
+import { BPM } from '../constants';
+import Knob from './Knob';
 
 const PlayControls: FC<{
   onPlayClick: () => void;
@@ -9,26 +9,21 @@ const PlayControls: FC<{
   tempo: number;
   playing: boolean;
 }> = ({ onPlayClick, onTempoChange, tempo, playing }) => {
-  const handleTempoChange = useCallback(
-    ({ value }: KnobProps) => onTempoChange(value ? value : BPM.MIN),
-    [onTempoChange],
-  );
   return (
     <nav>
-      <label>
-        <Knob
-          onChange={handleTempoChange}
-          value={tempo}
-          min={BPM.MIN}
-          max={BPM.MAX}
-          step={1}
-          showValue={true}
-        />
-        TEMPO
-      </label>
       <button onClick={onPlayClick}>
         {playing ? <SlControlPause /> : <SlControlPlay />}
       </button>
+      <Knob
+        onChange={onTempoChange}
+        min={BPM.MIN}
+        max={BPM.MAX}
+        defaultValue={BPM.MIN}
+        value={tempo}
+        direction={'vertical'}
+        step={1}
+        label={'TEMPO'}
+      />
     </nav>
   );
 };

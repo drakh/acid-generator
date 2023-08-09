@@ -1,5 +1,5 @@
-import { type FC, useCallback, useState } from 'react';
 import { Knob, type KnobProps } from 'primereact/knob';
+import { type FC, useCallback, useState } from 'react';
 import { SlEmotsmile } from 'react-icons/sl';
 
 import styles from './GeneratorControls.module.less';
@@ -17,7 +17,7 @@ const GeneratorControls: FC = () => {
   );
 
   return (
-    <nav>
+    <nav className={styles.controls}>
       <button className={styles.smile}>
         <SlEmotsmile />
       </button>

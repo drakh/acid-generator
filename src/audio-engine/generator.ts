@@ -1,8 +1,8 @@
 import { random } from 'lodash';
 import { type Unit } from 'tone';
+import { DEFAUL_SCALE } from '../constants';
 // import { getPattern } from 'euclidean-rhythms';
 import { arrayRand } from '../utils';
-import { DEFAUL_SCALE } from '../constants';
 import { SCALES } from './scales';
 
 type Octave = -1 | 0 | 1;
@@ -20,8 +20,8 @@ const generate = (seqLength: number, scaleName = DEFAUL_SCALE): SequenceStep[] =
     .map((_v, i) => i);
   const notesToGenerate = random(Math.floor(seqLength / 2), seqLength);
   const selectedSteps = arrayRand(elements, notesToGenerate);
-  const accents = arrayRand(selectedSteps, random(0, notesToGenerate));
-  const slides = arrayRand(selectedSteps, random(0, notesToGenerate));
+  const accents = arrayRand(selectedSteps, random(1, notesToGenerate / 2));
+  const slides = arrayRand(selectedSteps, random(0, notesToGenerate / 2));
   const randNotes = arrayRand(selectedSteps, random(0, notesToGenerate));
 
   const scale = SCALES[scaleName];

@@ -1,10 +1,10 @@
-import { start, Transport, Time, Frequency } from 'tone';
-import { tb303 } from './synth';
-import { store } from '../store';
-import { setStep, setPlaying, setTempo } from '../store/transport';
-import { setPattern } from '../store/sequencer';
-import { generate } from './generator';
+import { Frequency, start, Time, Transport } from 'tone';
 import { DEFAULT_TEMPO } from '../constants';
+import { store } from '../store';
+import { setPattern } from '../store/sequencer';
+import { setPlaying, setStep, setTempo } from '../store/transport';
+import { generate } from './generator';
+import { tb303 } from './synth';
 
 const { dispatch } = store;
 
@@ -31,7 +31,7 @@ const toggleTransport = async () => {
   }
 };
 
-Transport.scheduleRepeat(() => {
+Transport.scheduleRepeat((time) => {
   const {
     transport: { currentStep: oldStep },
     sequencer: {
@@ -47,7 +47,7 @@ Transport.scheduleRepeat(() => {
     if (note !== null && octave !== null) {
       const len = Time('16n').toSeconds() * (slide ? 1.25 : 0.4);
       const playNote = Frequency(baseNote + note + 12 * octave, 'midi').toNote();
-      tb303.triggerAttackRelease(playNote, len, undefined, accent ? 1 : 0.5);
+      tb303.triggerAttackRelease(playNote, len, time, accent ? 1 : 0.5);
     }
   }
 

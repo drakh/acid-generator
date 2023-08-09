@@ -1,14 +1,27 @@
-.smile {
-  background-color: #ff0;
-  padding: 0;
-  margin: 0;
+.controls {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  border-radius: 3rem;
+  padding: 1rem;
 
-  svg {
-    color: #000;
-    width: 6rem;
-    height: 6rem;
+  .smile {
+    background-color: #ff0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 4rem;
+    margin-right: 1rem;
+
+    svg {
+      width: 8rem;
+      height: 8rem;
+
+      path {
+        stroke: #000;
+        color: #000;
+      }
+    }
   }
+
 }
