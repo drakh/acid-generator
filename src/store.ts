@@ -1,14 +1,15 @@
 import { configureStore, type PayloadAction } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
-import transport from './store/transport';
+import generator from './store/generator';
 import sequencer from './store/sequencer';
-import { setPlaying, setStep } from './store/transport';
+import transport, { setPlaying, setStep } from './store/transport';
 import { type State } from './types';
 
 const store = configureStore<State>({
   reducer: combineReducers({
     transport,
     sequencer,
+    generator,
   }),
   middleware: [
     (store) => (next) => (action: PayloadAction) => {

@@ -1,6 +1,7 @@
 import { Frequency, start, Time, Transport } from 'tone';
 import { DEFAULT_TEMPO } from '../constants';
 import { store } from '../store';
+import { setGenerate } from '../store/generator';
 import { setPattern } from '../store/sequencer';
 import { setPlaying, setStep, setTempo } from '../store/transport';
 import { generate } from './generator';
@@ -22,9 +23,7 @@ const toggleTransport = async () => {
     console.error(e);
   } finally {
     if (Transport.state === 'started') {
-      store.dispatch(setStep(-1));
-    } else {
-      store.dispatch(setPattern(generate(16)));
+      dispatch(setStep(-1));
     }
     Transport.toggle();
     dispatch(setPlaying(Transport.state === 'started'));
@@ -38,9 +37,15 @@ Transport.scheduleRepeat((time) => {
       pattern,
       options: { seqLength, baseNote },
     },
+    generator: { dispatchGenerate },
   } = store.getState();
 
   const currentStep = oldStep + 1 >= seqLength ? 0 : oldStep + 1;
+
+  if (currentStep === 0 && dispatchGenerate) {
+    dispatch(setGenerate(false));
+    dispatch(setPattern(generate(16)));
+  }
 
   if (currentStep < pattern.length) {
     const { note, accent, slide, octave } = pattern[currentStep];

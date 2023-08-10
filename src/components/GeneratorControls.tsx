@@ -1,27 +1,23 @@
-import { Knob, type KnobProps } from 'primereact/knob';
-import { type FC, useCallback, useState } from 'react';
-import { SlEmotsmile } from 'react-icons/sl';
+import { type FC } from 'react';
+import {
+  FaRegSmileBeam as Acid,
+  FaRegSmileWink as AcidWaitingToHit,
+} from 'react-icons/fa';
 
 import styles from './GeneratorControls.module.less';
 
-const GeneratorControls: FC = () => {
-  const [val, setVal] = useState(0);
-
-  const onChange = useCallback(
-    ({ value }: KnobProps) => {
-      if (value) {
-        setVal(value);
-      }
-    },
-    [setVal],
-  );
-
+const GeneratorControls: FC<{ onGenerateClick: () => void; waiting: boolean }> = ({
+  onGenerateClick,
+  waiting,
+}) => {
   return (
     <nav className={styles.controls}>
-      <button className={styles.smile}>
-        <SlEmotsmile />
+      <button
+        className={`${styles.smile} ${waiting ? styles.waiting : ''}`}
+        onClick={onGenerateClick}
+      >
+        {waiting ? <AcidWaitingToHit /> : <Acid />}
       </button>
-      <Knob onChange={onChange} value={val} min={0} max={50} step={5} />
     </nav>
   );
 };

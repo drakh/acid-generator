@@ -1,12 +1,13 @@
 import { type FC, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-
-import './App.less';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeTempo, toggleTransport } from './audio-engine/controls';
 import GeneratorControls from './components/GeneratorControls';
 import Pattern from './components/Pattern';
 import PlayControls from './components/PlayControls';
+import { setGenerate } from './store/generator';
 import { type State } from './types';
+
+import './App.module.less';
 
 const App: FC = () => {
   const {
@@ -15,9 +16,16 @@ const App: FC = () => {
       pattern,
       options: { scale },
     },
+    generator: { dispatchGenerate },
   } = useSelector((state: State) => {
     return state;
   });
+
+  const dispatch = useDispatch();
+
+  const handleGenerateClick = useCallback(() => {
+    dispatch(setGenerate(true));
+  }, []);
 
   const togglePlay = useCallback(() => {
     void toggleTransport();
@@ -33,7 +41,10 @@ const App: FC = () => {
         onTempoChange={handleTempoChange}
         playing={playing}
       />
-      <GeneratorControls />
+      <GeneratorControls
+        onGenerateClick={handleGenerateClick}
+        waiting={dispatchGenerate}
+      />
       <section>
         <Pattern pattern={pattern} currentStep={currentStep} scaleName={scale} />
       </section>
