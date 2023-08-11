@@ -6,10 +6,25 @@ import { setPattern } from '../store/sequencer';
 import { setPlaying, setStep, setTempo } from '../store/transport';
 import { generate } from './generator';
 import { tb303 } from './synth';
+import { getNoteInScale } from '../utils';
 
 const { dispatch } = store;
 
 Transport.set({ bpm: DEFAULT_TEMPO });
+Transport.on('stop', () => {
+  try {
+    tb303.triggerRelease();
+  } catch (e) {
+    console.info(e);
+  } finally {
+    dispatch(setPlaying(false));
+    dispatch(setStep(-1));
+  }
+});
+
+Transport.on('start', () => {
+  dispatch(setPlaying(true));
+});
 
 const changeTempo = (bpm: number) => {
   Transport.set({ bpm });
@@ -22,25 +37,25 @@ const toggleTransport = async () => {
   } catch (e) {
     console.error(e);
   } finally {
-    if (Transport.state === 'started') {
-      dispatch(setStep(-1));
-    }
     Transport.toggle();
-    dispatch(setPlaying(Transport.state === 'started'));
   }
 };
 
-Transport.scheduleRepeat((time) => {
+const getNextStep = (step: number, maxSteps: number): number => {
+  return step + 1 >= maxSteps ? 0 : step + 1;
+};
+
+const playSequenceStep = (time: number) => {
   const {
     transport: { currentStep: oldStep },
     sequencer: {
       pattern,
-      options: { seqLength, baseNote },
+      options: { seqLength, baseNote, scale },
     },
     generator: { dispatchGenerate },
   } = store.getState();
 
-  const currentStep = oldStep + 1 >= seqLength ? 0 : oldStep + 1;
+  const currentStep = getNextStep(oldStep, seqLength);
 
   if (currentStep === 0 && dispatchGenerate) {
     dispatch(setGenerate(false));
@@ -49,14 +64,23 @@ Transport.scheduleRepeat((time) => {
 
   if (currentStep < pattern.length) {
     const { note, accent, slide, octave } = pattern[currentStep];
+
     if (note !== null && octave !== null) {
       const len = Time('16n').toSeconds() * (slide ? 1.25 : 0.4);
-      const playNote = Frequency(baseNote + note + 12 * octave, 'midi').toNote();
-      tb303.triggerAttackRelease(playNote, len, time, accent ? 1 : 0.5);
+      const playNote = Frequency(
+        getNoteInScale(note, scale, baseNote, octave),
+        'midi',
+      ).toNote();
+      tb303.triggerAttack(playNote, time, accent ? 1 : 0.5);
+      if (!slide) {
+        tb303.triggerRelease(time + len);
+      }
     }
   }
 
   dispatch(setStep(currentStep));
-}, '16n');
+};
+
+Transport.scheduleRepeat(playSequenceStep, '16n');
 
 export { toggleTransport, changeTempo };

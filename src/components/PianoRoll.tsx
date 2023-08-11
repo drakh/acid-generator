@@ -1,5 +1,6 @@
 import { type FC } from 'react';
 import { SCALE, SCALES } from '../audio-engine/scales';
+import { getNoteInScale } from '../utils';
 
 import styles from './PianoRoll.module.less';
 
@@ -24,7 +25,7 @@ const PianoRoll: FC<{
             className={`${styles.key} ${
               highlightScale && scale.includes(r) ? styles.inkey : ''
             } ${highlightScale && WHITE_KEYS.includes(r) ? styles.white : styles.black} ${
-              note === i ? styles.active : ''
+              getNoteInScale(note, scaleName) === i ? styles.active : ''
             } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''}`}
             key={`piano-roll-${i}`}
           />

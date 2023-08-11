@@ -16,7 +16,7 @@ const tb303 = new MonoSynth({
     attack: 0.01,
     decay: 0.3,
     sustain: 0.5,
-    release: 0.8,
+    release: 0.2,
   },
   filterEnvelope: {
     attackCurve: 'exponential',
@@ -24,16 +24,17 @@ const tb303 = new MonoSynth({
     attack: 0.01,
     decay: 0.3,
     sustain: 0.5,
-    release: 0.8,
+    release: 1,
     baseFrequency: 220,
-    exponent: 6,
+    exponent: 5,
   },
   filter: {
     frequency: 220,
     rolloff: -24,
-    Q: 3,
+    Q: 4,
     type: 'lowpass',
   },
+  portamento: 0.02,
 })
   .connect(split)
   .toDestination();
