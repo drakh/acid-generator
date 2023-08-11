@@ -7,10 +7,7 @@ on:
   push:
     branches:
       - master
-  release:
-    branches:
-      - master
-  release:
+  merge:
     branches:
       - master
 
@@ -39,7 +36,7 @@ jobs:
 
       - name: Ls
         run: ls -la
-        
+
       - name: RM
         run: rm -rf ./.gitignore
 
