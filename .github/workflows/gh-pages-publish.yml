@@ -36,8 +36,12 @@ jobs:
 
       - name: Ls
         run: ls -la
+        
+      - name: RM
+        run: rm -rf ./.gitignore
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist # The folder the action should deploy.
+          force: true
