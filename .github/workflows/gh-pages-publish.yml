@@ -7,9 +7,6 @@ on:
   push:
     branches:
       - master
-  merge:
-    branches:
-      - master
   release:
     branches:
       - master
