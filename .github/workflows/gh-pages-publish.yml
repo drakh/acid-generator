@@ -30,7 +30,7 @@ jobs:
 
       - name: Build
         run: npm run build --if-present
-        
+
       - name: Pwd
         run: pwd
 
