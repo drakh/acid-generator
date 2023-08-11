@@ -16,20 +16,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Node install
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build --if-present
 
-      - name: Checkout 🛎️
-        uses: actions/checkout@master
-        with:
-          persist-credentials: false
-          submodules: true  # TODO remove this if not using submodules in Hexo
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
