@@ -83,6 +83,7 @@ const playSequenceStep = (time: number) => {
 };
 
 const changeCutoff = (v: number) => {
+  // @ts-ignore: FrequencyEnvelope vs EnvelopeOptions which is missing baseFrequency
   tb303.filterEnvelope.set({ baseFrequency: v });
   tb303.filter.set({ frequency: v });
   dispatch(setCutoff(v));
