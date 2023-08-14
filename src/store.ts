@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import generator from './store/generator';
 import sequencer from './store/sequencer';
 import transport, { setPlaying, setStep } from './store/transport';
+import synth from './store/synth';
 import { type State } from './types';
 
 const store = configureStore<State>({
@@ -10,6 +11,7 @@ const store = configureStore<State>({
     transport,
     sequencer,
     generator,
+    synth,
   }),
   middleware: [
     (store) => (next) => (action: PayloadAction) => {

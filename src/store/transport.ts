@@ -4,10 +4,10 @@ import {
   type PayloadAction,
   type SliceCaseReducers,
 } from '@reduxjs/toolkit';
-import { DEFAULT_TEMPO } from '../constants';
+import { DEFAULTS } from '../constants';
 import { storage } from '../localStorage';
 
-const { transport: { tempo } = { tempo: DEFAULT_TEMPO } } = storage;
+const { transport: { tempo } = { tempo: DEFAULTS.BPM } } = storage;
 
 interface State {
   currentStep: number;
@@ -21,7 +21,7 @@ interface Reducers extends SliceCaseReducers<State> {
   setTempo: CaseReducer<State, PayloadAction<number>>;
 }
 
-const initialState: State = { currentStep: -1, playing: false, tempo: DEFAULT_TEMPO };
+const initialState: State = { currentStep: -1, playing: false, tempo: DEFAULTS.BPM };
 
 const slice = createSlice<State, Reducers>({
   name: 'transport',
