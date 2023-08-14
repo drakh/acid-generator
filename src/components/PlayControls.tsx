@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 import { SlControlPause, SlControlPlay } from 'react-icons/sl';
-import { BPM } from '../constants';
+import { BPM, DEFAULTS } from '../constants';
 import Knob from './Knob';
 
 const PlayControls: FC<{
@@ -18,7 +18,7 @@ const PlayControls: FC<{
         onChange={onTempoChange}
         min={BPM.MIN}
         max={BPM.MAX}
-        defaultValue={BPM.MIN}
+        defaultValue={DEFAULTS.BPM}
         value={tempo}
         direction={'vertical'}
         step={1}

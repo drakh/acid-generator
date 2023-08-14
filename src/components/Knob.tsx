@@ -28,7 +28,7 @@ interface Props {
   onChange: (v: number) => void;
 }
 
-const Knob: FC<Props> = ({ value, min, max, onChange, direction }) => {
+const Knob: FC<Props> = ({ value, min, max, onChange, direction, step }) => {
   const { rangePath: rP, valuePath: vP } = useMemo(() => {
     const zeroRadians = mapRange(
       min > 0 && max > 0 ? min : 0,
@@ -59,18 +59,15 @@ const Knob: FC<Props> = ({ value, min, max, onChange, direction }) => {
 
   const handleMouseDown = useCallback(
     ({ pageX: startX, pageY: startY }: ReactMouseEvent) => {
-      console.info('mouseDown', startX, startY);
-
       const handleMouseMove = (e: MouseEvent) => {
         e.preventDefault();
         const { pageX, pageY } = e;
         const newValue =
-          value + (direction === 'horizontal' ? pageX - startX : startY - pageY);
+          value + (direction === 'horizontal' ? pageX - startX : startY - pageY) * step;
         onChange(newValue >= max ? max : newValue <= min ? min : newValue);
       };
 
       const handleMouseUp = () => {
-        console.info('mouseUp');
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
       };
@@ -136,7 +133,7 @@ const KnobComponent: FC<Props & { label: string }> = ({
           value={inputVal}
           min={min || defaultValue}
           max={max || defaultValue}
-          step={1}
+          step={step}
           defaultValue={defaultValue}
           onChange={handleKnobChange}
           direction={direction}

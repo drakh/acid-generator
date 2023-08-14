@@ -1,8 +1,9 @@
 import { MonoSynth, PingPongDelay, Split, Volume } from 'tone';
+import { DEFAULTS } from '../constants';
 
 const split = new Split(2);
 const pingPong = new PingPongDelay('8n.', 0.6).toDestination();
-const vol = new Volume(-18).connect(pingPong);
+const vol = new Volume(DEFAULTS.DELAY_LEVEL).connect(pingPong);
 
 split.connect(vol);
 
@@ -25,13 +26,13 @@ const tb303 = new MonoSynth({
     decay: 0.3,
     sustain: 0.5,
     release: 1,
-    baseFrequency: 220,
+    baseFrequency: DEFAULTS.CUTOFF,
     exponent: 5,
   },
   filter: {
-    frequency: 220,
+    frequency: DEFAULTS.CUTOFF,
     rolloff: -24,
-    Q: 4,
+    Q: DEFAULTS.RESONANCE,
     type: 'lowpass',
   },
   portamento: 0.02,
@@ -39,4 +40,4 @@ const tb303 = new MonoSynth({
   .connect(split)
   .toDestination();
 
-export { tb303 };
+export { tb303, vol as delaySend };

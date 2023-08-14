@@ -10,6 +10,9 @@ on:
   release:
     branches:
       - master
+  release:
+    branches:
+      - master
 
 jobs:
   build:

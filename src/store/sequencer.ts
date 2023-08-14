@@ -5,7 +5,7 @@ import {
   type SliceCaseReducers,
 } from '@reduxjs/toolkit';
 import { generate, type SequenceStep } from '../audio-engine/generator';
-import { BASE_NOTE, DEFAUL_SCALE, DEFAUL_SEQ_LENGTH } from '../constants';
+import { BASE_NOTE, DEFAULTS } from '../constants';
 import { type SCALE } from '../audio-engine/scales';
 import { storage } from '../localStorage.ts';
 
@@ -21,8 +21,8 @@ interface State {
 }
 
 const initialState: State = {
-  pattern: generate(DEFAUL_SEQ_LENGTH),
-  options: { seqLength: DEFAUL_SEQ_LENGTH, baseNote: BASE_NOTE, scale: DEFAUL_SCALE },
+  pattern: generate(DEFAULTS.SEQ_LENGTH),
+  options: { seqLength: DEFAULTS.SEQ_LENGTH, baseNote: BASE_NOTE, scale: DEFAULTS.SCALE },
 };
 
 interface Reducers extends SliceCaseReducers<State> {

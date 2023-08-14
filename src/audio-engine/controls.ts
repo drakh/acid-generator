@@ -1,16 +1,17 @@
 import { Frequency, start, Time, Transport } from 'tone';
-import { DEFAULT_TEMPO } from '../constants';
+import { DEFAULTS } from '../constants';
 import { store } from '../store';
 import { setGenerate } from '../store/generator';
 import { setPattern } from '../store/sequencer';
 import { setPlaying, setStep, setTempo } from '../store/transport';
+import { setCutoff, setDelaySend, setResonance } from '../store/synth';
 import { generate } from './generator';
-import { tb303 } from './synth';
+import { delaySend, tb303 } from './synth';
 import { getNoteInScale } from '../utils';
 
 const { dispatch } = store;
 
-Transport.set({ bpm: DEFAULT_TEMPO });
+Transport.set({ bpm: DEFAULTS.BPM });
 Transport.on('stop', () => {
   try {
     tb303.triggerRelease();
@@ -81,6 +82,22 @@ const playSequenceStep = (time: number) => {
   dispatch(setStep(currentStep));
 };
 
+const changeCutoff = (v: number) => {
+  tb303.filterEnvelope.set({ baseFrequency: v });
+  tb303.filter.set({ frequency: v });
+  dispatch(setCutoff(v));
+};
+
+const changeResonance = (v: number) => {
+  tb303.filter.set({ Q: v });
+  dispatch(setResonance(v));
+};
+
+const changeDelaySend = (v: number) => {
+  delaySend.set({ volume: v });
+  dispatch(setDelaySend(v));
+};
+
 Transport.scheduleRepeat(playSequenceStep, '16n');
 
-export { toggleTransport, changeTempo };
+export { toggleTransport, changeTempo, changeCutoff, changeResonance, changeDelaySend };
