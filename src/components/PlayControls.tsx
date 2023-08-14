@@ -3,6 +3,8 @@ import { SlControlPause, SlControlPlay } from 'react-icons/sl';
 import { BPM, DEFAULTS } from '../constants';
 import Knob from './Knob';
 
+import styles from './PlayControls.module.less';
+
 const PlayControls: FC<{
   onPlayClick: () => void;
   onTempoChange: (v: number) => void;
@@ -10,7 +12,7 @@ const PlayControls: FC<{
   playing: boolean;
 }> = ({ onPlayClick, onTempoChange, tempo, playing }) => {
   return (
-    <nav>
+    <nav className={styles.playControls}>
       <button onClick={onPlayClick}>
         {playing ? <SlControlPause /> : <SlControlPlay />}
       </button>

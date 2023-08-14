@@ -24,7 +24,7 @@ const Pattern: FC<{
   );
 
   return (
-    <section>
+    <section className={styles.sequencer}>
       <ul className={styles.pattern}>
         <li className={styles.step}>
           <ul>

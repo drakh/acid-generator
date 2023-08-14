@@ -16,7 +16,7 @@ import { setGenerate } from './store/generator';
 import { setScale } from './store/sequencer';
 import { type State } from './types';
 
-import './App.module.less';
+import styles from './App.module.less';
 
 const App: FC = () => {
   useEffect(() => {
@@ -70,8 +70,23 @@ const App: FC = () => {
 
   const handleTempoChange = useCallback((bpm: number) => changeTempo(bpm), []);
 
+  useEffect(() => {
+    const bindKey = ({ code }: KeyboardEvent) => {
+      if (code === 'Space') {
+        void toggleTransport();
+      }
+      if (code === 'KeyG') {
+        dispatch(setGenerate(true));
+      }
+    };
+    window.addEventListener('keypress', bindKey);
+    return () => {
+      window.removeEventListener('keypress', bindKey);
+    };
+  }, [dispatch]);
+
   return (
-    <main>
+    <main className={styles.main}>
       <GeneratorControls
         onGenerateClick={handleGenerateClick}
         waiting={dispatchGenerate}
