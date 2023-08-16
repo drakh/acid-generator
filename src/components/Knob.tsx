@@ -28,7 +28,14 @@ interface Props {
   onChange: (v: number) => void;
 }
 
-const Knob: FC<Props> = ({ value, min, max, onChange, direction, step }) => {
+const Knob: FC<Omit<Props, 'defaultValue'>> = ({
+  value,
+  min,
+  max,
+  onChange,
+  direction,
+  step,
+}) => {
   const { rangePath: rP, valuePath: vP } = useMemo(() => {
     const zeroRadians = mapRange(
       min > 0 && max > 0 ? min : 0,
@@ -79,8 +86,8 @@ const Knob: FC<Props> = ({ value, min, max, onChange, direction, step }) => {
   );
 
   return (
-    <div>
-      <svg width={100} height={100} onMouseDown={handleMouseDown}>
+    <div className={styles.svgWrapper}>
+      <svg onMouseDown={handleMouseDown} viewBox="0 0 100 100">
         <path d={rP}></path>
         <path d={vP}></path>
       </svg>
@@ -101,8 +108,8 @@ const KnobComponent: FC<Props & { label: string }> = ({
   const [inputVal, setInputVal] = useState<number>(value || defaultValue);
 
   useEffect(() => {
-    setInputVal(value || defaultValue);
-  }, [setInputVal, value, defaultValue]);
+    setInputVal(value);
+  }, [setInputVal, value]);
 
   const handleOnSubmit = useCallback(
     (e: FormEvent) => {
@@ -131,10 +138,9 @@ const KnobComponent: FC<Props & { label: string }> = ({
         <header>{label}</header>
         <Knob
           value={inputVal}
-          min={min || defaultValue}
-          max={max || defaultValue}
+          min={min}
+          max={max}
           step={step}
-          defaultValue={defaultValue}
           onChange={handleKnobChange}
           direction={direction}
         />

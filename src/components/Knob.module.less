@@ -28,13 +28,20 @@ form {
         }
       }
 
-      path {
-        fill: rgba(0, 0, 0, 0);
-        stroke-width: 12;
-        stroke: @emerald--50;
+      .svgWrapper {
+        svg {
+          width: 5rem;
+          height: 5rem;
 
-        &:first-of-type {
-          stroke: @emerald--10;
+          path {
+            fill: rgba(0, 0, 0, 0);
+            stroke-width: 12;
+            stroke: @emerald--50;
+
+            &:first-of-type {
+              stroke: @emerald--10;
+            }
+          }
         }
       }
     }

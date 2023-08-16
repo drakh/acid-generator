@@ -16,18 +16,42 @@ export interface SequenceStep<T extends Unit.Note | null = Unit.Note | null> {
   slide: T extends null ? T : boolean;
 }
 
-const generate = (seqLength: number): SequenceStep[] => {
-  const elements = Array(seqLength)
+interface GeneratorParams {
+  patternLength: number;
+  density: number;
+  spread: number;
+  accentsDensity: number;
+  slidesDensity: number;
+}
+
+const generate = ({
+  patternLength,
+  density,
+  spread,
+  accentsDensity,
+  slidesDensity,
+}: GeneratorParams): SequenceStep[] => {
+  const elements = Array(patternLength)
     .fill(0)
     .map((_v, i) => i);
-  const notesToGenerate = random(Math.floor(seqLength / 2), seqLength);
+
+  const seqDensity = Math.round(patternLength * (density / 100));
+  const notesToGenerate = random(Math.round(seqDensity / 2), seqDensity);
+
   const selectedSteps = arrayRand(elements, notesToGenerate);
-  const accents = arrayRand(selectedSteps, random(1, notesToGenerate / 2));
-  const slides = arrayRand(selectedSteps, random(0, notesToGenerate / 2));
+
+  const accents = arrayRand(
+    selectedSteps,
+    random(1, Math.round((notesToGenerate / 2) * (accentsDensity / 100))),
+  );
+  const slides = arrayRand(
+    selectedSteps,
+    random(0, Math.round((notesToGenerate / 2) * (slidesDensity / 100))),
+  );
   const randNotes = arrayRand(selectedSteps, random(0, notesToGenerate));
 
-  const spread = random(0, scale.length - 1);
-  const selectedNotes = arrayRand(scale, spread);
+  const notesSpread = random(0, Math.round((scale.length - 1) * (spread / 100)));
+  const selectedNotes = arrayRand(scale, notesSpread);
 
   const out = elements.map((v) => {
     if (!selectedSteps.includes(v) || selectedSteps.length === 0) {

@@ -12,7 +12,14 @@ import GeneratorControls from './components/GeneratorControls';
 import Pattern from './components/Pattern';
 import PlayControls from './components/PlayControls';
 import SynthControls from './components/SynthControls';
-import { setGenerate } from './store/generator';
+import {
+  setAccentDensity,
+  setDensity,
+  setGenerate,
+  setPatternLength,
+  setSlidesDensity,
+  setSpread,
+} from './store/generator';
 import { setScale } from './store/sequencer';
 import { type State } from './types';
 
@@ -45,7 +52,14 @@ const App: FC = () => {
       pattern,
       options: { scale },
     },
-    generator: { dispatchGenerate },
+    generator: {
+      dispatchGenerate,
+      density,
+      spread,
+      accentsDensity,
+      patternLength,
+      slidesDensity,
+    },
     synth: { cutoff, resonance, delaySend },
   } = useSelector((state: State) => {
     return state;
@@ -60,6 +74,37 @@ const App: FC = () => {
   const handleScaleChange = useCallback(
     (newScale: SCALE) => {
       dispatch(setScale(newScale));
+    },
+    [dispatch],
+  );
+
+  const handlePatternLengthChange = useCallback(
+    (v: number) => {
+      dispatch(setPatternLength(v));
+    },
+    [dispatch],
+  );
+  const handleSpreadChange = useCallback(
+    (v: number) => {
+      dispatch(setSpread(v));
+    },
+    [dispatch],
+  );
+  const handleDensityChange = useCallback(
+    (v: number) => {
+      dispatch(setDensity(v));
+    },
+    [dispatch],
+  );
+  const handleAccentsDensityChange = useCallback(
+    (v: number) => {
+      dispatch(setAccentDensity(v));
+    },
+    [dispatch],
+  );
+  const handleSlidesDensityChange = useCallback(
+    (v: number) => {
+      dispatch(setSlidesDensity(v));
     },
     [dispatch],
   );
@@ -90,6 +135,16 @@ const App: FC = () => {
       <GeneratorControls
         onGenerateClick={handleGenerateClick}
         waiting={dispatchGenerate}
+        patternLength={patternLength}
+        density={density}
+        spread={spread}
+        accentsDensity={accentsDensity}
+        slidesDensity={slidesDensity}
+        onPatternLengthChange={handlePatternLengthChange}
+        onSpreadChange={handleSpreadChange}
+        onDensityChange={handleDensityChange}
+        onAccentsChange={handleAccentsDensityChange}
+        onSlidesChange={handleSlidesDensityChange}
       />
       <Pattern
         pattern={pattern}

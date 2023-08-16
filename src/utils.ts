@@ -5,12 +5,16 @@ const arrayRand = (arr: number[], l: number): number[] => {
 };
 
 const mapRange = (
-  x: number,
+  value: number,
   inMin: number,
   inMax: number,
   outMin: number,
   outMax: number,
-) => ((x - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+) => {
+  if (value <= inMin) return outMin;
+  if (value >= inMax) return outMax;
+  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+};
 
 type NullOrNumber<T> = T extends number ? number : null;
 

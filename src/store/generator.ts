@@ -4,16 +4,38 @@ import {
   type PayloadAction,
   type SliceCaseReducers,
 } from '@reduxjs/toolkit';
+import { DEFAULTS } from '../constants';
 
 interface State {
   dispatchGenerate: boolean;
+  patternLength: number;
+  density: number;
+  spread: number;
+  accentsDensity: number;
+  slidesDensity: number;
+  startWithNote: boolean;
+  startWithAccent: boolean;
 }
 
 interface Reducers extends SliceCaseReducers<State> {
   setGenerate: CaseReducer<State, PayloadAction<boolean>>;
+  setPatternLength: CaseReducer<State, PayloadAction<number>>;
+  setDensity: CaseReducer<State, PayloadAction<number>>;
+  setSpread: CaseReducer<State, PayloadAction<number>>;
+  setAccentDensity: CaseReducer<State, PayloadAction<number>>;
+  setSlidesDensity: CaseReducer<State, PayloadAction<number>>;
 }
 
-const initialState: State = { dispatchGenerate: false };
+const initialState: State = {
+  dispatchGenerate: false,
+  patternLength: DEFAULTS.SEQ_LENGTH,
+  density: 100,
+  spread: 100,
+  accentsDensity: 50,
+  slidesDensity: 50,
+  startWithAccent: false,
+  startWithNote: false,
+};
 
 const slice = createSlice<State, Reducers>({
   name: 'generateor',
@@ -25,14 +47,58 @@ const slice = createSlice<State, Reducers>({
         dispatchGenerate: payload,
       };
     },
+    setPatternLength: (state, { payload }) => {
+      return {
+        ...state,
+        patternLength: payload,
+      };
+    },
+    setDensity: (state, { payload }) => {
+      return {
+        ...state,
+        density: payload,
+      };
+    },
+    setSpread: (state, { payload }) => {
+      return {
+        ...state,
+        spread: payload,
+      };
+    },
+    setAccentDensity: (state, { payload }) => {
+      return {
+        ...state,
+        accentsDensity: payload,
+      };
+    },
+    setSlidesDensity: (state, { payload }) => {
+      return {
+        ...state,
+        slidesDensity: payload,
+      };
+    },
   },
 });
 
 const {
-  actions: { setGenerate },
+  actions: {
+    setGenerate,
+    setPatternLength,
+    setDensity,
+    setSpread,
+    setAccentDensity,
+    setSlidesDensity,
+  },
   reducer,
 } = slice;
 
-export { setGenerate };
+export {
+  setGenerate,
+  setPatternLength,
+  setDensity,
+  setSpread,
+  setAccentDensity,
+  setSlidesDensity,
+};
 export type { State as GeneratorState };
 export default reducer;

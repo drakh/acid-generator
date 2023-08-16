@@ -5,19 +5,51 @@
 
 .controls {
   display: flex;
-  flex-direction: row;
+  width: 100%;
   align-items: center;
-  padding: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 2rem;
+
+  ul {
+    padding: 0;
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+
+    li {
+      list-style: none;
+      margin: 0;
+      width: 12rem;
+      padding: 1rem;
+    }
+  }
+
+  aside {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-self: flex-start;
+
+    label {
+      display: block;
+
+      input {
+        margin-right: 1rem;
+      }
+    }
+  }
 
   .smile {
     background-color: @yellow--30;
     padding: 0;
-    margin: 0;
     display: flex;
     align-items: center;
     border-radius: @buttonRadius;
-    margin-right: 1rem;
-    &.waiting{
+    width: @buttonSize;
+    height: @buttonSize;
+    margin: auto;
+
+    &.waiting {
       background-color: @red--60;
     }
 
