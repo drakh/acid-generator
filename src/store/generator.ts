@@ -5,6 +5,9 @@ import {
   type SliceCaseReducers,
 } from '@reduxjs/toolkit';
 import { DEFAULTS } from '../constants';
+import { storage } from '../localStorage';
+
+const { generator } = storage;
 
 interface State {
   dispatchGenerate: boolean;
@@ -38,8 +41,12 @@ const initialState: State = {
 };
 
 const slice = createSlice<State, Reducers>({
-  name: 'generateor',
-  initialState,
+  name: 'generator',
+  initialState: {
+    ...initialState,
+    ...generator,
+    dispatchGenerate: false,
+  },
   reducers: {
     setGenerate: (state, { payload }) => {
       return {
