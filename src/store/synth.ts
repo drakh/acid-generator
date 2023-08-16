@@ -5,6 +5,9 @@ import {
   type SliceCaseReducers,
 } from '@reduxjs/toolkit';
 import { DEFAULTS } from '../constants';
+import { storage } from '../localStorage';
+
+const { synth } = storage;
 
 const { CUTOFF, RESONANCE, DELAY_LEVEL } = DEFAULTS;
 
@@ -28,7 +31,10 @@ const initialState: State = {
 
 const slice = createSlice<State, Reducers>({
   name: 'generateor',
-  initialState,
+  initialState: {
+    ...initialState,
+    ...synth,
+  },
   reducers: {
     setCutoff: (state, { payload }) => {
       return {
