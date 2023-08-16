@@ -18,7 +18,6 @@ const store = configureStore<State>({
       next(action);
       if (action.type !== setPlaying.type && action.type !== setStep.type) {
         const newState = store.getState();
-        console.info({ newState });
         localStorage.setItem('state', JSON.stringify(newState));
       }
     },

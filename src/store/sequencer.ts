@@ -14,15 +14,19 @@ const { sequencer = {} } = storage;
 interface State {
   pattern: SequenceStep[];
   options: {
-    seqLength: number;
     baseNote: number;
     scale: SCALE;
+    gate: number;
   };
 }
 
 const initialState: State = {
   pattern: generate(DEFAULTS.SEQ_LENGTH),
-  options: { seqLength: DEFAULTS.SEQ_LENGTH, baseNote: BASE_NOTE, scale: DEFAULTS.SCALE },
+  options: {
+    baseNote: BASE_NOTE,
+    scale: DEFAULTS.SCALE,
+    gate: 0.8,
+  },
 };
 
 interface Reducers extends SliceCaseReducers<State> {

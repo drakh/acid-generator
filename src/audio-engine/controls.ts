@@ -1,5 +1,4 @@
 import { Frequency, start, Time, Transport } from 'tone';
-import { DEFAULTS } from '../constants';
 import { store } from '../store';
 import { setGenerate } from '../store/generator';
 import { setPattern } from '../store/sequencer';
@@ -11,12 +10,15 @@ import { getNoteInScale } from '../utils';
 
 const { dispatch } = store;
 
-Transport.set({ bpm: DEFAULTS.BPM });
+const {
+  transport: { tempo },
+} = store.getState();
+
+Transport.set({ bpm: tempo });
+
 Transport.on('stop', () => {
   try {
     tb303.triggerRelease();
-  } catch (e) {
-    console.info(e);
   } finally {
     dispatch(setPlaying(false));
     dispatch(setStep(-1));
@@ -51,16 +53,29 @@ const playSequenceStep = (time: number) => {
     transport: { currentStep: oldStep },
     sequencer: {
       pattern,
-      options: { seqLength, baseNote, scale },
+      options: { baseNote, scale },
     },
-    generator: { dispatchGenerate },
+    generator: {
+      dispatchGenerate,
+      patternLength,
+      density,
+      spread,
+      accentsDensity,
+      slidesDensity,
+    },
   } = store.getState();
+
+  const seqLength = pattern.length;
 
   const currentStep = getNextStep(oldStep, seqLength);
 
   if (currentStep === 0 && dispatchGenerate) {
     dispatch(setGenerate(false));
-    dispatch(setPattern(generate(16)));
+    dispatch(
+      setPattern(
+        generate({ patternLength, density, spread, accentsDensity, slidesDensity }),
+      ),
+    );
   }
 
   if (currentStep < pattern.length) {
