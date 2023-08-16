@@ -21,7 +21,13 @@ interface State {
 }
 
 const initialState: State = {
-  pattern: generate(DEFAULTS.SEQ_LENGTH),
+  pattern: generate({
+    patternLength: DEFAULTS.SEQ_LENGTH,
+    spread: 100,
+    density: 100,
+    accentsDensity: 50,
+    slidesDensity: 50,
+  }),
   options: {
     baseNote: BASE_NOTE,
     scale: DEFAULTS.SCALE,
