@@ -3,7 +3,7 @@
 Web implementation of acid pattern generator heavily inspired
 by [**STING by SKINNERBOX**](https://maxforlive.com/library/device/4260/sting-by-skinnerbox) M4L device .
 
-[![IMAGE](https://maxforlive.com/images/screenshots/?ss=sting.jpg&id=4260)](https://maxforlive.com/library/device/4260/sting-by-skinnerbox))
+[![IMAGE](https://maxforlive.com/images/screenshots/?ss=sting.jpg&id=4260)](https://maxforlive.com/library/device/4260/sting-by-skinnerbox)
 
 
 
