@@ -5,6 +5,8 @@ import {
   changeDelaySend,
   changeResonance,
   changeTempo,
+  downloadPattern,
+  generatePattern,
   toggleTransport,
 } from './audio-engine/controls';
 import { type SCALE } from './audio-engine/scales';
@@ -15,7 +17,6 @@ import SynthControls from './components/SynthControls';
 import {
   setAccentDensity,
   setDensity,
-  setGenerate,
   setPatternLength,
   setSlidesDensity,
   setSpread,
@@ -51,6 +52,7 @@ const App: FC = () => {
     sequencer: {
       pattern,
       options: { scale },
+      name,
     },
     generator: {
       dispatchGenerate,
@@ -68,8 +70,8 @@ const App: FC = () => {
   const dispatch = useDispatch();
 
   const handleGenerateClick = useCallback(() => {
-    dispatch(setGenerate(true));
-  }, [dispatch]);
+    generatePattern();
+  }, []);
 
   const handleScaleChange = useCallback(
     (newScale: SCALE) => {
@@ -118,17 +120,17 @@ const App: FC = () => {
   useEffect(() => {
     const bindKey = ({ code }: KeyboardEvent) => {
       if (code === 'Space') {
-        void toggleTransport();
+        togglePlay();
       }
       if (code === 'KeyG') {
-        dispatch(setGenerate(true));
+        handleGenerateClick();
       }
     };
     window.addEventListener('keypress', bindKey);
     return () => {
       window.removeEventListener('keypress', bindKey);
     };
-  }, [dispatch]);
+  }, [dispatch, handleGenerateClick, togglePlay]);
 
   return (
     <main className={styles.main}>
@@ -147,6 +149,8 @@ const App: FC = () => {
         onSlidesChange={handleSlidesDensityChange}
       />
       <Pattern
+        onDownloadClick={downloadPattern}
+        name={name}
         pattern={pattern}
         currentStep={currentStep}
         scaleName={scale}
