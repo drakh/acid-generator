@@ -73,11 +73,17 @@ const Pattern: FC<{
                     highlightScale={false}
                   />
                 </li>
-                <li className={styles.cell}>{`${
-                  octave === 1 ? 'UP' : octave === -1 ? 'DW' : ''
-                }`}</li>
-                <li className={`${styles.cell} ${slide ? styles.slide : ''}`}>{slide}</li>
-                <li className={`${styles.cell} ${accent ? styles.accent : ''}`}></li>
+                <li
+                  className={`${styles.cell} ${
+                    octave === 1
+                      ? styles.octaveUp
+                      : octave === -1
+                      ? styles.octaveDown
+                      : ''
+                  }`}
+                />
+                <li className={`${styles.cell} ${slide ? styles.slide : ''}`} />
+                <li className={`${styles.cell} ${accent ? styles.accent : ''}`} />
               </ul>
             </li>
           );
