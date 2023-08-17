@@ -14,6 +14,7 @@ import GeneratorControls from './components/GeneratorControls';
 import Pattern from './components/Pattern';
 import PlayControls from './components/PlayControls';
 import SynthControls from './components/SynthControls';
+import About from './components/About';
 import {
   setAccentDensity,
   setDensity,
@@ -25,6 +26,8 @@ import { setScale } from './store/sequencer';
 import { type State } from './types';
 
 import styles from './App.module.less';
+
+import about from '../README.md?raw';
 
 const App: FC = () => {
   useEffect(() => {
@@ -170,6 +173,7 @@ const App: FC = () => {
         onResonanceChange={changeResonance}
         onDelaySendChange={changeDelaySend}
       />
+      <About content={about} />
     </main>
   );
 };

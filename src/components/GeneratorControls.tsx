@@ -106,16 +106,16 @@ const GeneratorControls: FC<{
           />
         </li>
       </ul>
-      <aside>
-        <label>
-          <input type="checkbox" />
-          START WITH NOTE
-        </label>
-        <label>
-          <input type="checkbox" />
-          START WITH ACCENT
-        </label>
-      </aside>
+      {/*<aside>*/}
+      {/*  <label>*/}
+      {/*    <input type="checkbox" />*/}
+      {/*    START WITH NOTE*/}
+      {/*  </label>*/}
+      {/*  <label>*/}
+      {/*    <input type="checkbox" />*/}
+      {/*    START WITH ACCENT*/}
+      {/*  </label>*/}
+      {/*</aside>*/}
     </nav>
   );
 };
