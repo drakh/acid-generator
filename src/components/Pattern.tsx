@@ -1,4 +1,5 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
+import { IoCloudDownloadOutline as DownloadIcon } from 'react-icons/io5';
 import { type SequenceStep } from '../audio-engine/generator';
 import { SCALE } from '../audio-engine/scales';
 import PianoRoll from './PianoRoll';
@@ -8,11 +9,13 @@ import styles from './Pattern.module.less';
 const scaleNames = Object.values(SCALE);
 
 const Pattern: FC<{
+  name: string;
   pattern: SequenceStep[];
   currentStep: number;
   scaleName: SCALE;
   onScaleChange: (scale: SCALE) => void;
-}> = ({ pattern, currentStep, scaleName, onScaleChange }) => {
+  onDownloadClick: () => void;
+}> = ({ name, pattern, currentStep, scaleName, onScaleChange, onDownloadClick }) => {
   const handleScaleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const {
@@ -25,6 +28,18 @@ const Pattern: FC<{
 
   return (
     <section className={styles.sequencer}>
+      <header>
+        <input type="text" value={name} readOnly />
+        <aside>
+          <menu>
+            <li>
+              <button title="save as midi" onClick={onDownloadClick}>
+                <DownloadIcon />
+              </button>
+            </li>
+          </menu>
+        </aside>
+      </header>
       <ul className={styles.pattern}>
         <li className={styles.step}>
           <ul>
@@ -69,15 +84,18 @@ const Pattern: FC<{
         })}
       </ul>
       <footer>
-        <select onChange={handleScaleChange} value={scaleName}>
-          {scaleNames.map((scale) => {
-            return (
-              <option value={scale} key={`scale-${scale}`}>
-                {scale}
-              </option>
-            );
-          })}
-        </select>
+        <label>
+          SCALE:
+          <select onChange={handleScaleChange} value={scaleName}>
+            {scaleNames.map((scale) => {
+              return (
+                <option value={scale} key={`scale-${scale}`}>
+                  {scale}
+                </option>
+              );
+            })}
+          </select>
+        </label>
       </footer>
     </section>
   );
