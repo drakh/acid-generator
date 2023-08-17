@@ -18,3 +18,11 @@ Main focus is on generating the sequence not the 303 sound.
 Hit **space** to start playing the sequence. 
 
 Hit **G** on your keyboard, or click the **SMILE** to generate new sequence.
+
+### TODO
+
+- output via MIDI, so you can control real synths
+- euclidean mode
+- store patterns
+- find out the format of Polyend Play fills to make exports for it possible. 
+- ?
