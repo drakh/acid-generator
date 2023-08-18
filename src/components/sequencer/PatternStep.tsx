@@ -1,14 +1,14 @@
 import { type FC } from 'react';
-import { SCALE, SCALES } from '../audio-engine/scales';
-import { getNoteInScale } from '../utils';
+import { SCALE, SCALES } from '../../audio-engine/scales';
+import { getNoteInScale } from '../../utils';
 
-import styles from './PianoRoll.module.less';
+import styles from './PatternStep.module.less';
 
 const OCTAVE = 12;
 const NOTES = Array(OCTAVE).fill(1);
 const WHITE_KEYS = SCALES[SCALE.MAJOR];
 
-const PianoRoll: FC<{
+const PatternStep: FC<{
   note: number | null;
   scaleName: SCALE;
   accent: boolean | null;
@@ -35,4 +35,4 @@ const PianoRoll: FC<{
   );
 };
 
-export default PianoRoll;
+export default PatternStep;

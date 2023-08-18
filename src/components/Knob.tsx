@@ -133,11 +133,6 @@ const KnobComponent: FC<Props & { label: string }> = ({
     [setInputVal],
   );
 
-  // const handleWheel = useCallback((e: ReactUIEvent) => {
-  //   console.info('scroll', e);
-  //   e.preventDefault();
-  // }, []);
-
   const wrapper = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

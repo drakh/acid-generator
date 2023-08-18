@@ -1,21 +1,24 @@
 import { type FC } from 'react';
 import { SlControlPause, SlControlPlay } from 'react-icons/sl';
-import { BPM, DEFAULTS } from '../constants';
-import Knob from './Knob';
+import { BPM, DEFAULTS } from '../../constants';
+import Knob from '../Knob';
+import Button from '../Button';
 
 import styles from './PlayControls.module.less';
 
-const PlayControls: FC<{
+interface Props {
   onPlayClick: () => void;
   onTempoChange: (v: number) => void;
   tempo: number;
   playing: boolean;
-}> = ({ onPlayClick, onTempoChange, tempo, playing }) => {
+}
+
+const PlayControls: FC<Props> = ({ onPlayClick, onTempoChange, tempo, playing }) => {
   return (
     <nav className={styles.playControls}>
-      <button onClick={onPlayClick}>
+      <Button onClick={onPlayClick} bindKey="Space">
         {playing ? <SlControlPause /> : <SlControlPlay />}
-      </button>
+      </Button>
       <Knob
         onChange={onTempoChange}
         min={BPM.MIN}
@@ -29,4 +32,7 @@ const PlayControls: FC<{
     </nav>
   );
 };
+
+export { type Props };
+
 export default PlayControls;
