@@ -12,6 +12,11 @@ import { storage } from '../localStorage';
 
 const { sequencer = {} } = storage;
 
+enum DIRECTION {
+  LEFT = 'left',
+  RIGHT = 'right',
+}
+
 interface State {
   pattern: SequenceStep[];
   name: string;
@@ -43,6 +48,7 @@ interface Reducers extends SliceCaseReducers<State> {
   setSequenceLength: CaseReducer<State, PayloadAction<number>>;
   setScale: CaseReducer<State, PayloadAction<SCALE>>;
   setName: CaseReducer<State, PayloadAction<string>>;
+  shiftPattern: CaseReducer<State, PayloadAction<DIRECTION>>;
 }
 
 const slice = createSlice<State, Reducers>({
@@ -84,14 +90,29 @@ const slice = createSlice<State, Reducers>({
         name: payload,
       };
     },
+    shiftPattern: (state, { payload }) => {
+      const { pattern } = state;
+      const { length } = pattern;
+      const first =
+        payload === DIRECTION.LEFT ? pattern.slice(0, 1) : pattern.slice(0, length - 1);
+      const second =
+        payload === DIRECTION.LEFT
+          ? pattern.slice(1, length)
+          : pattern.slice(length - 1, length);
+      console.info({ payload, first, second });
+      return {
+        ...state,
+        pattern: [...second, ...first],
+      };
+    },
   },
 });
 
 const {
-  actions: { setPattern, setSequenceLength, setScale, setName },
+  actions: { setPattern, setSequenceLength, setScale, setName, shiftPattern },
   reducer,
 } = slice;
 
-export { setPattern, setSequenceLength, setScale, setName };
+export { setPattern, setSequenceLength, setScale, setName, shiftPattern, DIRECTION };
 export type { State as SequencerState };
 export default reducer;

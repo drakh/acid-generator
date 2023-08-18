@@ -1,8 +1,5 @@
 import { type FC } from 'react';
-import {
-  FaRegSmileBeam as Acid,
-  FaRegSmileWink as AcidWaitingToHit,
-} from 'react-icons/fa';
+import { Acid, AcidWaitingToHit } from './Icons';
 import { DEFAULTS } from '../constants';
 import Knob from './Knob';
 import Button from './Button';

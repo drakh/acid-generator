@@ -4,7 +4,7 @@ import generator from './store/generator';
 import sequencer from './store/sequencer';
 import transport, { setPlaying, setStep } from './store/transport';
 import synth from './store/synth';
-import { type State } from './types';
+import { type State } from './store/types';
 
 const store = configureStore<State>({
   reducer: combineReducers({

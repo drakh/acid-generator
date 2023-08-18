@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { SlControlPause, SlControlPlay } from 'react-icons/sl';
+import { PauseIcon, PlayIcon } from '../Icons';
 import { BPM, DEFAULTS } from '../../constants';
 import Knob from '../Knob';
 import Button from '../Button';
@@ -17,7 +17,7 @@ const PlayControls: FC<Props> = ({ onPlayClick, onTempoChange, tempo, playing })
   return (
     <nav className={styles.playControls}>
       <Button onClick={onPlayClick} bindKey="Space">
-        {playing ? <SlControlPause /> : <SlControlPlay />}
+        {playing ? <PauseIcon /> : <PlayIcon />}
       </Button>
       <Knob
         onChange={onTempoChange}
