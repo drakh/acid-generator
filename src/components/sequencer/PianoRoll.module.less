@@ -1,68 +1,34 @@
-@import "../colors";
+@import "../../colors";
 
-.sequencer {
-  flex: 0 0 100%;
-  margin-bottom: 1rem;
+//footer {
+//  margin-top: 2rem;
+//
+//  label, select, option {
+//    font-size: 1.6rem;
+//    color: @emerald--40;
+//    background-color: transparent;
+//  }
+//
+//  select {
+//    margin-left: 1rem;
+//    border: 1px solid @emerald--30;
+//
+//    option {
+//      background-color: @gray--100;
+//    }
+//  }
+//}
+//
 
-  header {
-    display: flex;
-    margin-bottom: 1rem;
-
-    input, button {
-      border: none;
-      background-color: transparent;
-      color: @emerald--40;
-      font-size: 2rem;
-      line-height: 2rem;
-      font-weight: 700;
-    }
-
-    button {
-      cursor: pointer;
-      width: 2rem;
-      height: 2rem;
-
-      svg {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    aside {
-      margin-left: auto;
-
-      menu {
-        li {
-          list-style: none;
-          padding: 0;
-        }
-      }
-    }
-  }
-}
-
-footer {
-  margin-top: 2rem;
-
-  label, select, option {
-    font-size: 1.6rem;
-    color: @emerald--40;
-    background-color: transparent;
-  }
-
-  select {
-    margin-left: 1rem;
-    border: 1px solid @emerald--30;
-
-    option {
-      background-color: @gray--100;
-    }
-  }
-}
-
-ul {
+&.pattern {
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 60rem;
+  position: relative;
 
   li {
     list-style: none;
@@ -70,15 +36,6 @@ ul {
     margin: 0;
     text-align: center;
   }
-}
-
-&.pattern {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  padding: 0;
-  margin: 0;
-  width: 100%;
 
   .step {
     flex: 2;

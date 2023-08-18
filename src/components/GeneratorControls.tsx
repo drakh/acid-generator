@@ -5,6 +5,7 @@ import {
 } from 'react-icons/fa';
 import { DEFAULTS } from '../constants';
 import Knob from './Knob';
+import Button from './Button';
 
 import styles from './GeneratorControls.module.less';
 
@@ -38,12 +39,13 @@ const GeneratorControls: FC<{
 }) => {
   return (
     <nav className={styles.controls}>
-      <button
-        className={`${styles.smile} ${waiting ? styles.waiting : ''}`}
+      <Button
         onClick={onGenerateClick}
+        bindKey="KeyG"
+        className={`${styles.smile} ${waiting ? styles.waiting : ''}`}
       >
         {waiting ? <AcidWaitingToHit /> : <Acid />}
-      </button>
+      </Button>
       <ul>
         <li>
           <Knob

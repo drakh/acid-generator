@@ -11,9 +11,7 @@ import {
 } from './audio-engine/controls';
 import { type SCALE } from './audio-engine/scales';
 import GeneratorControls from './components/GeneratorControls';
-import Pattern from './components/Pattern';
-import PlayControls from './components/PlayControls';
-import SynthControls from './components/SynthControls';
+import Sequencer from './components/Sequencer';
 import About from './components/About';
 import {
   setAccentDensity,
@@ -120,21 +118,6 @@ const App: FC = () => {
 
   const handleTempoChange = useCallback((bpm: number) => changeTempo(bpm), []);
 
-  useEffect(() => {
-    const bindKey = ({ code }: KeyboardEvent) => {
-      if (code === 'Space') {
-        togglePlay();
-      }
-      if (code === 'KeyG') {
-        handleGenerateClick();
-      }
-    };
-    window.addEventListener('keypress', bindKey);
-    return () => {
-      window.removeEventListener('keypress', bindKey);
-    };
-  }, [dispatch, handleGenerateClick, togglePlay]);
-
   return (
     <main className={styles.main}>
       <GeneratorControls
@@ -151,27 +134,23 @@ const App: FC = () => {
         onAccentsChange={handleAccentsDensityChange}
         onSlidesChange={handleSlidesDensityChange}
       />
-      <Pattern
+      <Sequencer
         onDownloadClick={downloadPattern}
         name={name}
         pattern={pattern}
         currentStep={currentStep}
         scaleName={scale}
         onScaleChange={handleScaleChange}
-      />
-      <PlayControls
-        onPlayClick={togglePlay}
-        tempo={tempo}
-        onTempoChange={handleTempoChange}
-        playing={playing}
-      />
-      <SynthControls
         resonance={resonance}
         cutoff={cutoff}
         delay={delaySend}
         onCutoffChange={changeCutoff}
         onResonanceChange={changeResonance}
         onDelaySendChange={changeDelaySend}
+        onPlayClick={togglePlay}
+        onTempoChange={handleTempoChange}
+        tempo={tempo}
+        playing={playing}
       />
       <About content={about} />
     </main>

@@ -1,17 +1,19 @@
 import { type FC } from 'react';
-import Knob from './Knob';
-import { CUTOFF, DEFAULTS, DELAY_SEND, RES } from '../constants';
+import Knob from '../Knob';
+import { CUTOFF, DEFAULTS, DELAY_SEND, RES } from '../../constants';
 
 import styles from './SynthControls.module.less';
 
-const SynthControls: FC<{
+interface Props {
   resonance: number;
   cutoff: number;
   delay: number;
   onCutoffChange: (v: number) => void;
   onResonanceChange: (v: number) => void;
   onDelaySendChange: (v: number) => void;
-}> = ({
+}
+
+const SynthControls: FC<Props> = ({
   cutoff,
   resonance,
   delay,
@@ -62,5 +64,7 @@ const SynthControls: FC<{
     </aside>
   );
 };
+
+export { type Props };
 
 export default SynthControls;

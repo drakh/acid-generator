@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { mapRange } from '../utils';
@@ -132,8 +133,26 @@ const KnobComponent: FC<Props & { label: string }> = ({
     [setInputVal],
   );
 
+  const wrapper = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (wrapper.current) {
+      const wheelHandler = (e: WheelEvent) => {
+        e.preventDefault();
+        const { deltaY } = e;
+        const stepDown = value - step <= min ? min : value - step;
+        const stepUp = value + step >= max ? max : value + step;
+        onChange(deltaY < 0 ? stepUp : stepDown);
+      };
+      wrapper.current?.addEventListener('wheel', wheelHandler, { passive: false });
+      return () => {
+        wrapper.current?.removeEventListener('wheel', wheelHandler);
+      };
+    }
+  }, [onChange, value, min, max, step]);
+
   return (
-    <form className={styles.knobWrapper} onSubmit={handleOnSubmit}>
+    <form className={styles.knobWrapper} ref={wrapper}>
       <label>
         <header>{label}</header>
         <Knob
@@ -151,6 +170,7 @@ const KnobComponent: FC<Props & { label: string }> = ({
           max={max}
           step={step}
           onChange={handleInputChange}
+          onSubmit={handleOnSubmit}
         />
       </label>
     </form>
