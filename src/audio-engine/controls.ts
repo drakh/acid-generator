@@ -82,6 +82,7 @@ const playSequenceStep = (time: number) => {
       options: { baseNote, scale },
     },
     generator: { dispatchGenerate },
+    synth: { resonance },
   } = store.getState();
 
   const seqLength = pattern.length;
@@ -101,6 +102,7 @@ const playSequenceStep = (time: number) => {
         getNoteInScale(note, scale, baseNote, octave),
         'midi',
       ).toNote();
+      tb303.filter.set({ Q: accent ? resonance + 2 : resonance });
       tb303.triggerAttack(playNote, time, accent ? 1 : 0.5);
       if (!slide) {
         tb303.triggerRelease(time + len);
