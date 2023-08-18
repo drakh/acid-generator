@@ -1,7 +1,7 @@
-import { type GeneratorState } from './store/generator';
-import { type SequencerState } from './store/sequencer';
-import { type TransportState } from './store/transport';
-import { type SynthState } from './store/synth';
+import { type GeneratorState } from './generator';
+import { type SequencerState } from './sequencer';
+import { type TransportState } from './transport';
+import { type SynthState } from './synth';
 
 // type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
 //   ? Acc[number]

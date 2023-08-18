@@ -25,11 +25,18 @@ const Sequencer: FC<Props> = ({
   onTempoChange,
   tempo,
   playing,
+  onShiftRightClick,
+  onShiftLeftClick,
 }) => {
   return (
     <section className={styles.sequencer}>
       <header>
-        <Header name={name} onDownloadClick={onDownloadClick} />
+        <Header
+          name={name}
+          onDownloadClick={onDownloadClick}
+          onShiftRightClick={onShiftRightClick}
+          onShiftLeftClick={onShiftLeftClick}
+        />
       </header>
       <main>
         <PianoRoll pattern={pattern} currentStep={currentStep} scaleName={scaleName} />

@@ -1,4 +1,4 @@
-import { type State } from './types';
+import { type State } from './store/types';
 
 const dataKey = 'state';
 

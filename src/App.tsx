@@ -20,8 +20,8 @@ import {
   setSlidesDensity,
   setSpread,
 } from './store/generator';
-import { setScale } from './store/sequencer';
-import { type State } from './types';
+import { DIRECTION, setScale, shiftPattern } from './store/sequencer';
+import { type State } from './store/types';
 
 import styles from './App.module.less';
 
@@ -118,6 +118,14 @@ const App: FC = () => {
 
   const handleTempoChange = useCallback((bpm: number) => changeTempo(bpm), []);
 
+  const handleShiftLeftClick = useCallback(() => {
+    dispatch(shiftPattern(DIRECTION.LEFT));
+  }, [dispatch]);
+
+  const handleShiftRightClick = useCallback(() => {
+    dispatch(shiftPattern(DIRECTION.RIGHT));
+  }, [dispatch]);
+
   return (
     <main className={styles.main}>
       <GeneratorControls
@@ -151,6 +159,8 @@ const App: FC = () => {
         onTempoChange={handleTempoChange}
         tempo={tempo}
         playing={playing}
+        onShiftLeftClick={handleShiftLeftClick}
+        onShiftRightClick={handleShiftRightClick}
       />
       <About content={about} />
     </main>
