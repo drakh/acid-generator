@@ -1,46 +1,44 @@
 @import "../colors";
 
-form {
-  &.knobWrapper {
+&.knobWrapper {
+  display: flex;
+  flex-direction: column;
+  color: @emerald--50;
+  font-weight: bold;
+
+  label {
     display: flex;
     flex-direction: column;
     color: @emerald--50;
-    font-weight: bold;
 
-    label {
-      display: flex;
-      flex-direction: column;
+    input {
+      outline: none;
+      display: block;
+      background: transparent;
       color: @emerald--50;
+      margin: 0;
+      padding: 0.5rem;
+      text-align: center;
+      border: 1px solid transparent;
 
-      input {
-        outline: none;
-        display: block;
-        background: transparent;
-        color: @emerald--50;
-        margin: 0;
-        padding: 0.5rem;
-        text-align: center;
-        border: 1px solid transparent;
-
-        &:focus {
-          border: 1px solid @emerald--50;
-          color: @emerald--20
-        }
+      &:focus {
+        border: 1px solid @emerald--50;
+        color: @emerald--20
       }
+    }
 
-      .svgWrapper {
-        svg {
-          width: 5rem;
-          height: 5rem;
+    .svgWrapper {
+      svg {
+        width: 5rem;
+        height: 5rem;
 
-          path {
-            fill: rgba(0, 0, 0, 0);
-            stroke-width: 12;
-            stroke: @emerald--50;
+        path {
+          fill: rgba(0, 0, 0, 0);
+          stroke-width: 12;
+          stroke: @emerald--50;
 
-            &:first-of-type {
-              stroke: @emerald--10;
-            }
+          &:first-of-type {
+            stroke: @emerald--10;
           }
         }
       }
