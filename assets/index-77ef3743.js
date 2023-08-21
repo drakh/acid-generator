@@ -346,6 +346,10 @@ Created with help of [Tone.js](https://tonejs.github.io/).
 
 Main focus is on generating the sequence not the 303 sound.
 
+[Live demo](https://drakh.github.io/acid-generator/)
+
+[Repository](https://github.com/drakh/acid-generator)
+
 ## USAGE
 
 Hit **space** to start playing the sequence. 
