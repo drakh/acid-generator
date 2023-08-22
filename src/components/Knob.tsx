@@ -136,15 +136,23 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
   const handleMouseDown = useCallback(
     (e: ReactMouseEvent) => {
       e.preventDefault();
-      const { pageX: startY, pageY: startX } = e;
+      const { pageX: startX, pageY: startY } = e;
 
       const handleMouseMove = (e: MouseEvent) => {
         e.preventDefault();
         const { pageX, pageY } = e;
-
-        onChange(
-          calculateValue(startX, startY, pageX, pageY, step, min, max, value, direction),
+        const v = calculateValue(
+          startX,
+          startY,
+          pageX,
+          pageY,
+          step,
+          min,
+          max,
+          value,
+          direction,
         );
+        onChange(v);
       };
 
       const handleMouseUp = () => {
@@ -173,7 +181,6 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
           const {
             touches: [{ pageX, pageY }],
           } = e;
-
           onChange(
             calculateValue(
               startX,
