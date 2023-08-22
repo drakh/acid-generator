@@ -38,9 +38,9 @@ const App: FC = () => {
         // midi.addEventListener('statechange', (ev) => {
         //   console.info({ ev });
         // });
-        midi.outputs.forEach((out) => {
-          console.info(parseInt(String(9), 16).toString(16));
-          console.info({ out });
+        midi.outputs.forEach((_out) => {
+          // console.info(parseInt(String(9), 16).toString(16));
+          // console.info({ out });
         });
       } catch (e) {
         console.error(e);

@@ -99,7 +99,6 @@ const slice = createSlice<State, Reducers>({
         payload === DIRECTION.LEFT
           ? pattern.slice(1, length)
           : pattern.slice(length - 1, length);
-      console.info({ payload, first, second });
       return {
         ...state,
         pattern: [...second, ...first],
