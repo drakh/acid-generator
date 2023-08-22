@@ -83,13 +83,31 @@ const describeArc = (
 const radius = 40;
 const mid = 50;
 
+type Direction = 'vertical' | 'horizontal';
+
+const calculateValue = (
+  startX: number,
+  startY: number,
+  pageX: number,
+  pageY: number,
+  step: number,
+  min: number,
+  max: number,
+  currentValue: number,
+  direction: Direction,
+): number => {
+  const newValue =
+    currentValue + (direction === 'horizontal' ? pageX - startX : startY - pageY) * step;
+  return newValue >= max ? max : newValue <= min ? min : newValue;
+};
+
 interface Props {
   value: number;
   min: number;
   max: number;
   step: number;
   defaultValue: number;
-  direction: 'vertical' | 'horizontal';
+  direction: Direction;
   onChange: (v: number) => void;
 }
 
@@ -116,13 +134,17 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
   }, [value, min, max]);
 
   const handleMouseDown = useCallback(
-    ({ pageX: startX, pageY: startY }: ReactMouseEvent) => {
+    (e: ReactMouseEvent) => {
+      e.preventDefault();
+      const { pageX: startY, pageY: startX } = e;
+
       const handleMouseMove = (e: MouseEvent) => {
         e.preventDefault();
         const { pageX, pageY } = e;
-        const newValue =
-          value + (direction === 'horizontal' ? pageX - startX : startY - pageY) * step;
-        onChange(newValue >= max ? max : newValue <= min ? min : newValue);
+
+        onChange(
+          calculateValue(startX, startY, pageX, pageY, step, min, max, value, direction),
+        );
       };
 
       const handleMouseUp = () => {
@@ -133,12 +155,59 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
       window.addEventListener('mouseup', handleMouseUp);
       window.addEventListener('mousemove', handleMouseMove);
     },
-    [direction, value, min, max, onChange],
+    [direction, value, min, max, onChange, step],
   );
+
+  const wrapper = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    if (wrapper.current) {
+      const touchStartHandler = (e: TouchEvent) => {
+        e.preventDefault();
+        const {
+          touches: [{ pageX: startX, pageY: startY }],
+        } = e;
+        const touchMoveHandler = (e: TouchEvent) => {
+          e.preventDefault();
+
+          const {
+            touches: [{ pageX, pageY }],
+          } = e;
+
+          onChange(
+            calculateValue(
+              startX,
+              startY,
+              pageX,
+              pageY,
+              step,
+              min,
+              max,
+              value,
+              direction,
+            ),
+          );
+        };
+        const touchEndHandler = () => {
+          wrapper.current?.removeEventListener('touchmove', touchMoveHandler);
+          wrapper.current?.removeEventListener('touchend', touchEndHandler);
+        };
+
+        wrapper.current?.addEventListener('touchend', touchEndHandler);
+        wrapper.current?.addEventListener('touchmove', touchMoveHandler);
+      };
+      wrapper.current.addEventListener('touchstart', touchStartHandler, {
+        passive: false,
+      });
+      return () => {
+        wrapper.current?.removeEventListener('touchstart', touchStartHandler);
+      };
+    }
+  }, [value, min, max, direction, onChange]);
 
   return (
     <div className={styles.svgWrapper}>
-      <svg onMouseDown={handleMouseDown} viewBox="0 0 100 100">
+      <svg onMouseDown={handleMouseDown} viewBox="0 0 100 100" ref={wrapper}>
         <path d={rP}></path>
         <path d={vP}></path>
       </svg>
