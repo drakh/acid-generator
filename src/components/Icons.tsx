@@ -1,21 +1,29 @@
 import {
-  SlControlEnd as ShiftRight,
+  SlControlEnd as ShiftRightIcon,
   SlControlPause as PauseIcon,
   SlControlPlay as PlayIcon,
-  SlControlStart as ShiftLeft,
+  SlControlStart as ShiftLeftIcon,
 } from 'react-icons/sl';
 import {
-  FaRegSmileBeam as Acid,
-  FaRegSmileWink as AcidWaitingToHit,
+  RiFolderDownloadLine as SaveIcon,
+  RiFolderUploadLine as LoadIcon,
+} from 'react-icons/ri';
+import { PiSmileyXEyesFill as DeleteIcon } from 'react-icons/pi';
+import {
+  FaRegSmileBeam as AcidIcon,
+  FaRegSmileWink as AcidWaitingToHitIcon,
 } from 'react-icons/fa';
 import { IoCloudDownloadOutline as DownloadIcon } from 'react-icons/io5';
 
 export {
   PlayIcon,
   PauseIcon,
-  Acid,
-  AcidWaitingToHit,
+  AcidIcon,
+  AcidWaitingToHitIcon,
   DownloadIcon,
-  ShiftLeft,
-  ShiftRight,
+  ShiftLeftIcon,
+  ShiftRightIcon,
+  SaveIcon,
+  LoadIcon,
+  DeleteIcon,
 };

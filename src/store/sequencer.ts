@@ -5,10 +5,12 @@ import {
   type SliceCaseReducers,
 } from '@reduxjs/toolkit';
 import dockerNames from 'docker-names-ts';
+import { concat } from 'lodash';
 import { generate, type SequenceStep } from '../audio-engine/generator';
 import { BASE_NOTE, DEFAULTS } from '../constants';
 import { type SCALE } from '../audio-engine/scales';
 import { storage } from '../localStorage';
+import { type Pattern } from '../types';
 
 const { sequencer = {} } = storage;
 
@@ -17,12 +19,10 @@ enum DIRECTION {
   RIGHT = 'right',
 }
 
-interface State {
-  pattern: SequenceStep[];
-  name: string;
+interface State extends Pattern {
+  storedPatterns: Pattern[];
   options: {
     baseNote: number;
-    scale: SCALE;
     gate: number;
   };
 }
@@ -36,19 +36,22 @@ const initialState: State = {
     slidesDensity: 50,
   }),
   name: dockerNames.getRandomName(),
+  scale: DEFAULTS.SCALE,
   options: {
     baseNote: BASE_NOTE,
-    scale: DEFAULTS.SCALE,
     gate: 0.8,
   },
+  storedPatterns: [],
 };
 
 interface Reducers extends SliceCaseReducers<State> {
   setPattern: CaseReducer<State, PayloadAction<SequenceStep[]>>;
-  setSequenceLength: CaseReducer<State, PayloadAction<number>>;
   setScale: CaseReducer<State, PayloadAction<SCALE>>;
   setName: CaseReducer<State, PayloadAction<string>>;
   shiftPattern: CaseReducer<State, PayloadAction<DIRECTION>>;
+  storePattern: CaseReducer<State, PayloadAction<Pattern>>;
+  loadPattern: CaseReducer<State, PayloadAction<number>>;
+  deletePattern: CaseReducer<State, PayloadAction<number>>;
 }
 
 const slice = createSlice<State, Reducers>({
@@ -64,24 +67,10 @@ const slice = createSlice<State, Reducers>({
         pattern: payload,
       };
     },
-    setSequenceLength: (state, { payload }) => {
-      const { options } = state;
-      return {
-        ...state,
-        options: {
-          ...options,
-          seqLength: payload,
-        },
-      };
-    },
     setScale: (state, { payload }) => {
-      const { options } = state;
       return {
         ...state,
-        options: {
-          ...options,
-          scale: payload,
-        },
+        scale: payload,
       };
     },
     setName: (state, { payload }) => {
@@ -104,14 +93,53 @@ const slice = createSlice<State, Reducers>({
         pattern: [...second, ...first],
       };
     },
+    storePattern: (state, { payload }) => {
+      return {
+        ...state,
+        storedPatterns: concat(payload, state.storedPatterns),
+      };
+    },
+    loadPattern: (state, { payload }) => {
+      const patternToLoad = state.storedPatterns[payload];
+      return {
+        ...state,
+        ...patternToLoad,
+      };
+    },
+    deletePattern: (state, { payload }) => {
+      const { storedPatterns } = state;
+      return {
+        ...state,
+        storedPatterns: storedPatterns.filter((_p, i) => i !== payload),
+      };
+    },
   },
 });
 
 const {
-  actions: { setPattern, setSequenceLength, setScale, setName, shiftPattern },
+  actions: {
+    setPattern,
+    setSequenceLength,
+    setScale,
+    setName,
+    shiftPattern,
+    storePattern,
+    loadPattern,
+    deletePattern,
+  },
   reducer,
 } = slice;
 
-export { setPattern, setSequenceLength, setScale, setName, shiftPattern, DIRECTION };
+export {
+  setPattern,
+  setSequenceLength,
+  setScale,
+  setName,
+  shiftPattern,
+  DIRECTION,
+  storePattern,
+  loadPattern,
+  deletePattern,
+};
 export type { State as SequencerState };
 export default reducer;

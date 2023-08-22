@@ -27,6 +27,7 @@ const Sequencer: FC<Props> = ({
   playing,
   onShiftRightClick,
   onShiftLeftClick,
+  onPatternStoreClick,
 }) => {
   return (
     <section className={styles.sequencer}>
@@ -36,6 +37,7 @@ const Sequencer: FC<Props> = ({
           onDownloadClick={onDownloadClick}
           onShiftRightClick={onShiftRightClick}
           onShiftLeftClick={onShiftLeftClick}
+          onPatternStoreClick={onPatternStoreClick}
         />
       </header>
       <main>
