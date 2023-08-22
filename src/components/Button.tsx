@@ -14,9 +14,9 @@ const Button: FC<Props> = ({ children, onClick, bindKey, className, title }) => 
   useEffect(() => {
     if (bindKey && onClick) {
       const keyboardHandler = (e: KeyboardEvent) => {
-        e.preventDefault();
         const { code } = e;
         if (code === bindKey) {
+          e.preventDefault();
           onClick();
         }
       };
