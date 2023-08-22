@@ -8,7 +8,7 @@ import { store } from './store.ts';
 
 const {
   env: { NODE_ENV },
-} = process;
+} = process || {};
 
 NODE_ENV !== 'development'
   ? PiwikPro.initialize(
