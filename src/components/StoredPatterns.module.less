@@ -1,0 +1,50 @@
+@import "../colors";
+
+.header {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: @emerald--60;
+}
+
+.list {
+  padding: 1rem;
+  margin: 0;
+
+  & li {
+    color: @emerald--50;
+    list-style: none;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid @emerald--30;
+
+    main {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: right;
+
+      button {
+        background-color: transparent;
+        margin: 0.5rem;
+        border: none;
+
+        svg {
+          width: 2rem;
+          height: 2rem;
+          fill: @emerald--40;
+          stroke: @emerald--40;
+        }
+
+        &.delete {
+          svg {
+            fill: @red--70;
+            stroke: @red--70;
+          }
+        }
+      }
+    }
+  }
+}

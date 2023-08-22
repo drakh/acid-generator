@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { DownloadIcon, ShiftLeft, ShiftRight } from '../Icons';
+import { DownloadIcon, SaveIcon, ShiftLeftIcon, ShiftRightIcon } from '../Icons';
 import Button from '../Button';
 
 import styles from './Header.module.less';
@@ -9,6 +9,7 @@ interface Props {
   onDownloadClick: () => void;
   onShiftLeftClick: () => void;
   onShiftRightClick: () => void;
+  onPatternStoreClick: () => void;
 }
 
 const Header: FC<Props> = ({
@@ -16,6 +17,7 @@ const Header: FC<Props> = ({
   onDownloadClick,
   onShiftRightClick,
   onShiftLeftClick,
+  onPatternStoreClick,
 }) => {
   return (
     <>
@@ -32,13 +34,30 @@ const Header: FC<Props> = ({
             </Button>
           </li>
           <li>
-            <Button className={styles.header} onClick={onShiftRightClick}>
-              <ShiftRight />
+            <Button
+              className={styles.header}
+              title="store pattern"
+              onClick={onPatternStoreClick}
+            >
+              <SaveIcon />
             </Button>
           </li>
           <li>
-            <Button className={styles.header} onClick={onShiftLeftClick}>
-              <ShiftLeft />
+            <Button
+              className={styles.header}
+              onClick={onShiftRightClick}
+              title="shift pattern right"
+            >
+              <ShiftRightIcon />
+            </Button>
+          </li>
+          <li>
+            <Button
+              className={styles.header}
+              onClick={onShiftLeftClick}
+              title="shift pattern left"
+            >
+              <ShiftLeftIcon />
             </Button>
           </li>
         </menu>

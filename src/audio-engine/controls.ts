@@ -9,6 +9,7 @@ import { setCutoff, setDelaySend, setResonance } from '../store/synth';
 import { generate } from './generator';
 import { delaySend, tb303 } from './synth';
 import { getNoteInScale } from '../utils';
+import { type Pattern } from '../types';
 
 const { dispatch } = store;
 
@@ -74,7 +75,8 @@ const playSequenceStep = (time: number) => {
     transport: { currentStep: oldStep },
     sequencer: {
       pattern,
-      options: { baseNote, scale },
+      scale,
+      options: { baseNote },
     },
     generator: { dispatchGenerate },
     synth: { resonance },
@@ -136,12 +138,13 @@ const download = <T extends ArrayBuffer>(data: T, fileName: string): void => {
   document.body.removeChild(el);
 };
 
-const downloadPattern = () => {
+const downloadPattern = ({ name, scale, pattern }: Pattern) => {
   const {
     sequencer: {
-      name,
-      pattern,
-      options: { scale, baseNote },
+      // name,
+      // pattern,
+      // scale,
+      options: { baseNote },
     },
     transport: { tempo },
   } = store.getState();
