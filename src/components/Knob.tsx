@@ -271,7 +271,7 @@ const KnobComponent: FC<Props & { label: string }> = ({
   }, [onChange, value, min, max, step]);
 
   return (
-    <form className={styles.knobWrapper} ref={wrapper}>
+    <form className={styles.knobWrapper} ref={wrapper} onSubmit={handleOnSubmit}>
       <label>
         <header>{label}</header>
         <Knob
@@ -289,7 +289,6 @@ const KnobComponent: FC<Props & { label: string }> = ({
           max={max}
           step={step}
           onChange={handleInputChange}
-          onSubmit={handleOnSubmit}
         />
       </label>
     </form>
