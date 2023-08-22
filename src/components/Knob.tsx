@@ -10,14 +10,78 @@ import {
   useState,
 } from 'react';
 import { mapRange } from '../utils';
-
 import styles from './Knob.module.less';
 
-const minRadians = (4 * Math.PI) / 3;
-const maxRadians = -Math.PI / 3;
+const { PI, cos, sin } = Math;
+
+type Vec = [number, number];
+type Matrix = [Vec, Vec];
+
+// var angle = (Math.atan2(x,y) * (180/Math.PI) + 360) % 360;
+
+const rad2deg = (deg: number): number => deg * (180 / PI);
+const deg2rad = (rad: number): number => rad * (PI / 180);
+
+const matrixMultiply = ([[a, b], [c, d]]: Matrix, [x, y]: Vec): Vec => {
+  return [a * x + b * y, c * x + d * y];
+};
+
+const matrixRotate = (x: number): Matrix => {
+  return [
+    [cos(x), -sin(x)],
+    [sin(x), cos(x)],
+  ];
+};
+
+const vecAdd = ([a1, a2]: Vec, [b1, b2]: Vec): Vec => {
+  return [a1 + b1, a2 + b2];
+};
+
+const describeArc = (
+  cx: number,
+  cy: number,
+  radius: number,
+  startDegrees: number,
+  endDegrees: number,
+  rotationDegrees: number,
+): string => {
+  const rotMatrix = matrixRotate(deg2rad(rotationDegrees));
+
+  const [sx, sy] = vecAdd(
+    matrixMultiply(rotMatrix, [
+      radius * cos(deg2rad(startDegrees)),
+      radius * sin(deg2rad(startDegrees)),
+    ]),
+    [cx, cy],
+  );
+  const [ex, ey] = vecAdd(
+    matrixMultiply(rotMatrix, [
+      radius * cos(deg2rad(startDegrees + endDegrees)),
+      radius * sin(deg2rad(startDegrees + endDegrees)),
+    ]),
+    [cx, cy],
+  );
+
+  const fA = endDegrees > rad2deg(PI) ? 1 : 0;
+  const fS = endDegrees > 0 ? 1 : 0;
+
+  return [
+    'M',
+    sx,
+    sy,
+    'A',
+    radius,
+    radius,
+    deg2rad(rotationDegrees),
+    fA,
+    fS,
+    ex,
+    ey,
+  ].join(' ');
+};
+
 const radius = 40;
-const midX = 50;
-const midY = 50;
+const mid = 50;
 
 interface Props {
   value: number;
@@ -38,29 +102,15 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
   step,
 }) => {
   const { rangePath: rP, valuePath: vP } = useMemo(() => {
-    const zeroRadians = mapRange(
-      min > 0 && max > 0 ? min : 0,
-      min,
-      max,
-      minRadians,
-      maxRadians,
+    const rangePath = describeArc(mid, mid, radius, 0, 300, 120);
+    const valuePath = describeArc(
+      mid,
+      mid,
+      radius,
+      0,
+      mapRange(value, min, max, 0, 300),
+      120,
     );
-    const valueRadians = mapRange(value, min, max, minRadians, maxRadians);
-
-    const minX = midX + Math.cos(minRadians) * radius;
-    const minY = midY - Math.sin(minRadians) * radius;
-    const maxX = midX + Math.cos(maxRadians) * radius;
-    const maxY = midY - Math.sin(maxRadians) * radius;
-    const zeroX = midX + Math.cos(zeroRadians) * radius;
-    const zeroY = midY - Math.sin(zeroRadians) * radius;
-    const valueX = midX + Math.cos(valueRadians) * radius;
-    const valueY = midY - Math.sin(valueRadians) * radius;
-
-    const largeArc = Math.abs(zeroRadians - valueRadians) < Math.PI ? 0 : 1;
-    const sweep = valueRadians > zeroRadians ? 0 : 1;
-
-    const rangePath = `M ${minX} ${minY} A ${radius} ${radius} 0 1 1 ${maxX} ${maxY}`;
-    const valuePath = `M ${zeroX} ${zeroY} A ${radius} ${radius} 0 ${largeArc} ${sweep} ${valueX} ${valueY}`;
 
     return { rangePath, valuePath };
   }, [value, min, max]);
