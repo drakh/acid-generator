@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Acid, AcidWaitingToHit } from './Icons';
+import { AcidIcon, AcidWaitingToHitIcon } from './Icons';
 import { DEFAULTS } from '../constants';
 import Knob from './Knob';
 import Button from './Button';
@@ -41,7 +41,7 @@ const GeneratorControls: FC<{
         bindKey="KeyG"
         className={`${styles.smile} ${waiting ? styles.waiting : ''}`}
       >
-        {waiting ? <AcidWaitingToHit /> : <Acid />}
+        {waiting ? <AcidWaitingToHitIcon /> : <AcidIcon />}
       </Button>
       <ul>
         <li>
