@@ -19,7 +19,6 @@ const {
 Transport.set({ bpm: tempo });
 
 Transport.on('stop', () => {
-  console.info('stop');
   try {
     tb303.triggerRelease();
   } finally {
@@ -29,7 +28,6 @@ Transport.on('stop', () => {
 });
 
 Transport.on('start', () => {
-  console.info('start');
   dispatch(setPlaying(true));
 });
 
@@ -57,13 +55,10 @@ const generatePattern = (force = false) => {
     transport: { playing },
     generator: { patternLength, density, spread, accentsDensity, slidesDensity },
   } = store.getState();
-  console.info({ force, playing });
   if (playing && !force) {
-    console.info('prepare to generate');
     dispatch(setGenerate(true));
     return;
   }
-  console.info('generate');
   dispatch(setGenerate(false));
   dispatch(setName(dockerNames.getRandomName()));
   dispatch(
