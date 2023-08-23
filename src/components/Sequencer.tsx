@@ -41,7 +41,9 @@ const Sequencer: FC<Props> = ({
         />
       </header>
       <main>
-        <PianoRoll pattern={pattern} currentStep={currentStep} scaleName={scaleName} />
+        <div>
+          <PianoRoll pattern={pattern} currentStep={currentStep} scaleName={scaleName} />
+        </div>
       </main>
       <footer>
         <Footer scaleName={scaleName} onScaleChange={onScaleChange} />

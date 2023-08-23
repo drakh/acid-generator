@@ -28,6 +28,7 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
           <li className={styles.cell}>O</li>
           <li className={styles.cell}>S</li>
           <li className={styles.cell}>A</li>
+          <li className={styles.cell}>N</li>
         </ul>
       </li>
       {pattern.map(({ note, octave, accent, slide }, i) => {
@@ -53,6 +54,7 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
               />
               <li className={`${styles.cell} ${slide ? styles.slide : ''}`} />
               <li className={`${styles.cell} ${accent ? styles.accent : ''}`} />
+              <li className={styles.cell}>{i + 1}</li>
             </ul>
           </li>
         );
