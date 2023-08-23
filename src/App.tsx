@@ -199,7 +199,7 @@ const App: FC = () => {
         />
         <About content={about} />
       </main>
-      <aside>
+      <aside className="storedPatterns">
         <StoredPatterns
           patterns={storedPatterns}
           onDownloadClick={handleDownloadPattern}
