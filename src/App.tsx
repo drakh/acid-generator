@@ -46,7 +46,7 @@ const App: FC = () => {
         // midi.addEventListener('statechange', (ev) => {
         //   console.info({ ev });
         // });
-        midi.outputs.forEach((_out) => {
+        midi.outputs.forEach(() => {
           // console.info(parseInt(String(9), 16).toString(16));
           // console.info({ out });
         });
@@ -161,7 +161,7 @@ const App: FC = () => {
 
   return (
     <>
-      <main className={styles.main}>
+      <main className={`mainPart ${styles.main}`}>
         <GeneratorControls
           onGenerateClick={handleGenerateClick}
           waiting={dispatchGenerate}
@@ -199,7 +199,7 @@ const App: FC = () => {
         />
         <About content={about} />
       </main>
-      <aside>
+      <aside className="storedPatterns">
         <StoredPatterns
           patterns={storedPatterns}
           onDownloadClick={handleDownloadPattern}
