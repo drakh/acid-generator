@@ -161,7 +161,7 @@ const App: FC = () => {
 
   return (
     <>
-      <main className={styles.main}>
+      <main className={`mainPart ${styles.main}`}>
         <GeneratorControls
           onGenerateClick={handleGenerateClick}
           waiting={dispatchGenerate}
