@@ -46,7 +46,7 @@ const App: FC = () => {
         // midi.addEventListener('statechange', (ev) => {
         //   console.info({ ev });
         // });
-        midi.outputs.forEach((_out) => {
+        midi.outputs.forEach(() => {
           // console.info(parseInt(String(9), 16).toString(16));
           // console.info({ out });
         });

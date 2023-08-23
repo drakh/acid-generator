@@ -170,6 +170,7 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
 
   useEffect(() => {
     if (wrapper.current) {
+      const refWrap = wrapper.current;
       const touchStartHandler = (e: TouchEvent) => {
         e.preventDefault();
         const {
@@ -196,21 +197,21 @@ const Knob: FC<Omit<Props, 'defaultValue'>> = ({
           );
         };
         const touchEndHandler = () => {
-          wrapper.current?.removeEventListener('touchmove', touchMoveHandler);
-          wrapper.current?.removeEventListener('touchend', touchEndHandler);
+          refWrap.removeEventListener('touchmove', touchMoveHandler);
+          refWrap.removeEventListener('touchend', touchEndHandler);
         };
 
-        wrapper.current?.addEventListener('touchend', touchEndHandler);
-        wrapper.current?.addEventListener('touchmove', touchMoveHandler);
+        refWrap.addEventListener('touchend', touchEndHandler);
+        refWrap.addEventListener('touchmove', touchMoveHandler);
       };
-      wrapper.current.addEventListener('touchstart', touchStartHandler, {
+      refWrap.addEventListener('touchstart', touchStartHandler, {
         passive: false,
       });
       return () => {
-        wrapper.current?.removeEventListener('touchstart', touchStartHandler);
+        refWrap.removeEventListener('touchstart', touchStartHandler);
       };
     }
-  }, [value, min, max, direction, onChange]);
+  }, [value, min, max, direction, onChange, step]);
 
   return (
     <div className={styles.svgWrapper}>
@@ -263,6 +264,7 @@ const KnobComponent: FC<Props & { label: string }> = ({
 
   useEffect(() => {
     if (wrapper.current) {
+      const refWrap = wrapper.current;
       const wheelHandler = (e: WheelEvent) => {
         e.preventDefault();
         const { deltaY } = e;
@@ -270,9 +272,9 @@ const KnobComponent: FC<Props & { label: string }> = ({
         const stepUp = value + step >= max ? max : value + step;
         onChange(deltaY < 0 ? stepUp : stepDown);
       };
-      wrapper.current?.addEventListener('wheel', wheelHandler, { passive: false });
+      refWrap.addEventListener('wheel', wheelHandler, { passive: false });
       return () => {
-        wrapper.current?.removeEventListener('wheel', wheelHandler);
+        refWrap.removeEventListener('wheel', wheelHandler);
       };
     }
   }, [onChange, value, min, max, step]);
