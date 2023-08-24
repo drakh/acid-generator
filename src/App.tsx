@@ -13,6 +13,7 @@ import { type SCALE } from './audio-engine/scales';
 import GeneratorControls from './components/GeneratorControls';
 import Sequencer from './components/Sequencer';
 import About from './components/About';
+import StoredPatterns from './components/StoredPatterns';
 import {
   setAccentDensity,
   setDensity,
@@ -21,44 +22,50 @@ import {
   setSpread,
 } from './store/generator';
 import {
+  addMidiOutput,
   deletePattern,
   DIRECTION,
   loadPattern,
+  setMidiInterface,
   setScale,
   shiftPattern,
   storePattern,
 } from './store/sequencer';
-import { type State } from './store/types';
+import { type State } from './store';
 
 import styles from './App.module.less';
 
 import about from '../README.md?raw';
-import StoredPatterns from './components/StoredPatterns.tsx';
 
 const App: FC = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const getMidi = async () => {
       try {
         const midi = await window.navigator.requestMIDIAccess();
-        // midi.addEventListener('onstatechange',()=>{
-        //
-        // })
-        // midi.addEventListener('statechange', (ev) => {
-        //   console.info({ ev });
-        // });
-        midi.outputs.forEach(() => {
-          // console.info(parseInt(String(9), 16).toString(16));
-          // console.info({ out });
+        dispatch(setMidiInterface(midi));
+        midi.outputs.forEach((output) => {
+          dispatch(addMidiOutput({ output, selected: false, channel: 0 }));
         });
       } catch (e) {
         console.error(e);
       }
     };
     void getMidi();
-  }, []);
+  }, [dispatch]);
+
   const {
     transport: { currentStep, tempo, playing },
-    sequencer: { pattern, scale, name, storedPatterns },
+    sequencer: {
+      pattern,
+      scale,
+      name,
+      storedPatterns,
+      options: {
+        output: { outputs },
+      },
+    },
     generator: {
       dispatchGenerate,
       density,
@@ -71,8 +78,6 @@ const App: FC = () => {
   } = useSelector((state: State) => {
     return state;
   });
-
-  const dispatch = useDispatch();
 
   const handleGenerateClick = useCallback(() => {
     generatePattern();
@@ -196,6 +201,7 @@ const App: FC = () => {
           onShiftLeftClick={handleShiftLeftClick}
           onShiftRightClick={handleShiftRightClick}
           onPatternStoreClick={handlePatternStoreClick}
+          outputs={outputs}
         />
         <About content={about} />
       </main>
