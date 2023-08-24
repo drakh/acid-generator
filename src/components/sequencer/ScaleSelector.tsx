@@ -11,7 +11,7 @@ interface Props {
 }
 
 const ScaleSelector: FC<Props> = ({ onScaleChange, scaleName }) => {
-  const handleScaleChange = useCallback(
+  const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const {
         currentTarget: { value },
@@ -23,7 +23,7 @@ const ScaleSelector: FC<Props> = ({ onScaleChange, scaleName }) => {
   return (
     <label className={styles.scaleSelector}>
       SCALE:
-      <select onChange={handleScaleChange} value={scaleName}>
+      <select onChange={handleChange} value={scaleName}>
         {scaleNames.map((scale) => {
           return (
             <option value={scale} key={`scale-${scale}`}>

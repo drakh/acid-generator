@@ -1,12 +1,16 @@
 import { type FC } from 'react';
 import ScaleSelector, { type Props as ScaleSelectorProps } from './ScaleSelector';
+import OutputSelector, { type Props as OutputSelectorProps } from './OutputSelector';
 
-type Props = ScaleSelectorProps;
+import styles from './Footer.module.less';
 
-const Footer: FC<Props> = ({ scaleName, onScaleChange }) => {
+type Props = ScaleSelectorProps & OutputSelectorProps;
+
+const Footer: FC<Props> = ({ scaleName, onScaleChange, outputs, onOutputChange }) => {
   return (
-    <section>
+    <section className={styles.sequencerFooter}>
       <ScaleSelector scaleName={scaleName} onScaleChange={onScaleChange} />
+      <OutputSelector outputs={outputs} onOutputChange={onOutputChange} />
     </section>
   );
 };

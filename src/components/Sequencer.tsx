@@ -3,15 +3,11 @@ import Footer, { type Props as FooterProps } from './sequencer/Footer';
 import Header, { type Props as HeaderProps } from './sequencer/Header';
 import PianoRoll, { type Props as PianoRollProps } from './sequencer/PianoRoll';
 import Controls, { type Props as ControlsProps } from './sequencer/Controls';
-import { type SequencerOutput } from '../types';
 import { internalSynth } from '../constants';
 
 import styles from './Sequencer.module.less';
 
-type Props = FooterProps &
-  HeaderProps &
-  PianoRollProps &
-  ControlsProps & { outputs: SequencerOutput[] };
+type Props = FooterProps & HeaderProps & PianoRollProps & ControlsProps;
 
 const Sequencer: FC<Props> = ({
   scaleName,
@@ -34,7 +30,9 @@ const Sequencer: FC<Props> = ({
   onShiftLeftClick,
   onPatternStoreClick,
   outputs,
+  onOutputChange,
 }) => {
+  const selectedOutput = outputs.find(({ selected }) => selected);
   return (
     <section className={styles.sequencer}>
       <header>
@@ -52,28 +50,26 @@ const Sequencer: FC<Props> = ({
         </div>
       </main>
       <footer>
-        <ul>
-          {outputs.map(({ output }, i) => {
-            return (
-              <li key={`seq-out-${i}`}>
-                {output === internalSynth ? internalSynth : output.name}
-              </li>
-            );
-          })}
-        </ul>
-        <Footer scaleName={scaleName} onScaleChange={onScaleChange} />
-        <Controls
-          resonance={resonance}
-          cutoff={cutoff}
-          delay={delay}
-          onCutoffChange={onCutoffChange}
-          onResonanceChange={onResonanceChange}
-          onDelaySendChange={onDelaySendChange}
-          onPlayClick={onPlayClick}
-          onTempoChange={onTempoChange}
-          tempo={tempo}
-          playing={playing}
+        <Footer
+          scaleName={scaleName}
+          onScaleChange={onScaleChange}
+          outputs={outputs}
+          onOutputChange={onOutputChange}
         />
+        {selectedOutput?.output === internalSynth ? (
+          <Controls
+            resonance={resonance}
+            cutoff={cutoff}
+            delay={delay}
+            onCutoffChange={onCutoffChange}
+            onResonanceChange={onResonanceChange}
+            onDelaySendChange={onDelaySendChange}
+            onPlayClick={onPlayClick}
+            onTempoChange={onTempoChange}
+            tempo={tempo}
+            playing={playing}
+          />
+        ) : null}
       </footer>
     </section>
   );
