@@ -1,9 +1,9 @@
-import { type FC } from 'react';
+import { type FC, useMemo } from 'react';
 import Footer, { type Props as FooterProps } from './sequencer/Footer';
 import Header, { type Props as HeaderProps } from './sequencer/Header';
 import PianoRoll, { type Props as PianoRollProps } from './sequencer/PianoRoll';
 import Controls, { type Props as ControlsProps } from './sequencer/Controls';
-import { internalSynth } from '../constants';
+import { getOutput } from '../utils';
 
 import styles from './Sequencer.module.less';
 
@@ -31,8 +31,9 @@ const Sequencer: FC<Props> = ({
   onPatternStoreClick,
   outputs,
   onOutputChange,
+  onChannelChange,
 }) => {
-  const selectedOutput = outputs.find(({ selected }) => selected);
+  const output = useMemo(() => getOutput(outputs), [outputs]);
   return (
     <section className={styles.sequencer}>
       <header>
@@ -56,20 +57,20 @@ const Sequencer: FC<Props> = ({
           outputs={outputs}
           onOutputChange={onOutputChange}
         />
-        {selectedOutput?.output === internalSynth ? (
-          <Controls
-            resonance={resonance}
-            cutoff={cutoff}
-            delay={delay}
-            onCutoffChange={onCutoffChange}
-            onResonanceChange={onResonanceChange}
-            onDelaySendChange={onDelaySendChange}
-            onPlayClick={onPlayClick}
-            onTempoChange={onTempoChange}
-            tempo={tempo}
-            playing={playing}
-          />
-        ) : null}
+        <Controls
+          resonance={resonance}
+          cutoff={cutoff}
+          delay={delay}
+          onCutoffChange={onCutoffChange}
+          onResonanceChange={onResonanceChange}
+          onDelaySendChange={onDelaySendChange}
+          onPlayClick={onPlayClick}
+          onTempoChange={onTempoChange}
+          tempo={tempo}
+          playing={playing}
+          output={output}
+          onChannelChange={onChannelChange}
+        />
       </footer>
     </section>
   );

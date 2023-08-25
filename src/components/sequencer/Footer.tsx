@@ -10,7 +10,9 @@ const Footer: FC<Props> = ({ scaleName, onScaleChange, outputs, onOutputChange }
   return (
     <section className={styles.sequencerFooter}>
       <ScaleSelector scaleName={scaleName} onScaleChange={onScaleChange} />
-      <OutputSelector outputs={outputs} onOutputChange={onOutputChange} />
+      {outputs.length ? (
+        <OutputSelector outputs={outputs} onOutputChange={onOutputChange} />
+      ) : null}
     </section>
   );
 };

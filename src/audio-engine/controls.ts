@@ -8,8 +8,8 @@ import { setPlaying, setStep, setTempo } from '../store/transport';
 import { setCutoff, setDelaySend, setResonance } from '../store/synth';
 import { generate } from './generator';
 import { delaySend, tb303 } from './synth';
-import { getNoteInScale } from '../utils';
-import { type Pattern } from '../types';
+import { getNoteInScale, getOutput } from '../utils';
+import { type Pattern, type SequencerOutput } from '../types';
 
 const { dispatch } = store;
 
@@ -19,13 +19,18 @@ const {
 
 Transport.set({ bpm: tempo });
 
-Transport.on('stop', () => {
+const stopInternalSynth = (): void => {
   try {
     tb303.triggerRelease();
-  } finally {
-    dispatch(setPlaying(false));
-    dispatch(setStep(-1));
+  } catch (e) {
+    console.error('stop synth', e);
   }
+};
+
+Transport.on('stop', () => {
+  stopInternalSynth();
+  dispatch(setPlaying(false));
+  dispatch(setStep(-1));
 });
 
 Transport.on('start', () => {
@@ -70,17 +75,57 @@ const generatePattern = (force = false) => {
   return;
 };
 
+const playNote = ({
+  output,
+  noteNumber,
+  accent,
+  time,
+  len,
+  resonance,
+  slide,
+}: {
+  output: SequencerOutput | undefined;
+  noteNumber: number;
+  accent: boolean | null;
+  slide: boolean | null;
+  time: number;
+  len: number;
+  resonance: number;
+}) => {
+  if (!output) {
+    tb303.filter.set({ Q: accent ? resonance + 2 : resonance });
+    tb303.triggerAttack(Frequency(noteNumber, 'midi').toNote(), time, accent ? 1 : 0.5);
+    if (!slide) {
+      tb303.triggerRelease(time + len);
+    }
+    return;
+  }
+
+  const { port, channel } = output;
+  const midiChannel = channel.toString(16);
+  const noteOn = parseInt(`0x9${midiChannel}`, 16);
+  const noteOff = parseInt(`0x8${midiChannel}`, 16);
+  port.send([noteOn, noteNumber, accent ? 127 : 63], time);
+  port.send([noteOff, noteNumber, 0], time + len);
+  return;
+};
+
 const playSequenceStep = (time: number) => {
   const {
     transport: { currentStep: oldStep },
     sequencer: {
       pattern,
       scale,
-      options: { baseNote },
+      options: {
+        baseNote,
+        output: { outputs },
+      },
     },
     generator: { dispatchGenerate },
     synth: { resonance },
   } = store.getState();
+
+  const output = getOutput(outputs);
 
   const seqLength = pattern.length;
 
@@ -95,15 +140,11 @@ const playSequenceStep = (time: number) => {
 
     if (note !== null && octave !== null) {
       const len = Time('16n').toSeconds() * (slide ? 1.25 : 0.4);
-      const playNote = Frequency(
+      const noteNumber = Frequency(
         getNoteInScale(note, scale, baseNote, octave),
         'midi',
-      ).toNote();
-      tb303.filter.set({ Q: accent ? resonance + 2 : resonance });
-      tb303.triggerAttack(playNote, time, accent ? 1 : 0.5);
-      if (!slide) {
-        tb303.triggerRelease(time + len);
-      }
+      ).toMidi();
+      playNote({ noteNumber, output, accent, slide, time, len, resonance });
     }
   }
 
@@ -141,9 +182,6 @@ const download = <T extends ArrayBuffer>(data: T, fileName: string): void => {
 const downloadPattern = ({ name, scale, pattern }: Pattern) => {
   const {
     sequencer: {
-      // name,
-      // pattern,
-      // scale,
       options: { baseNote },
     },
     transport: { tempo },
@@ -188,4 +226,5 @@ export {
   changeDelaySend,
   downloadPattern,
   generatePattern,
+  stopInternalSynth,
 };

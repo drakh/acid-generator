@@ -7,6 +7,7 @@ import {
   changeTempo,
   downloadPattern,
   generatePattern,
+  stopInternalSynth,
   toggleTransport,
 } from './audio-engine/controls';
 import { type SCALE } from './audio-engine/scales';
@@ -24,17 +25,20 @@ import {
 import {
   addMidiOutput,
   deletePattern,
-  DIRECTION,
   loadPattern,
+  selectOutput,
+  setMidiChannel,
   setMidiInterface,
   setScale,
   shiftPattern,
   storePattern,
 } from './store/sequencer';
 import { type State } from './store';
+import { DIRECTION } from './types';
 
 import styles from './App.module.less';
 
+// eslint-disable-next-line import/no-unresolved
 import about from '../README.md?raw';
 
 const App: FC = () => {
@@ -45,8 +49,8 @@ const App: FC = () => {
       try {
         const midi = await window.navigator.requestMIDIAccess();
         dispatch(setMidiInterface(midi));
-        midi.outputs.forEach((output) => {
-          dispatch(addMidiOutput({ output, selected: false, channel: 0 }));
+        midi.outputs.forEach((port) => {
+          dispatch(addMidiOutput({ port, selected: false, channel: 0 }));
         });
       } catch (e) {
         console.error(e);
@@ -164,6 +168,21 @@ const App: FC = () => {
     [storedPatterns],
   );
 
+  const handleOutputChange = useCallback(
+    (id: string | undefined) => {
+      stopInternalSynth();
+      dispatch(selectOutput(id));
+    },
+    [dispatch],
+  );
+
+  const handleChannelChange = useCallback(
+    (channel: number, id: string) => {
+      dispatch(setMidiChannel({ channel, id }));
+    },
+    [dispatch],
+  );
+
   return (
     <>
       <main className={`mainPart ${styles.main}`}>
@@ -202,6 +221,8 @@ const App: FC = () => {
           onShiftRightClick={handleShiftRightClick}
           onPatternStoreClick={handlePatternStoreClick}
           outputs={outputs}
+          onOutputChange={handleOutputChange}
+          onChannelChange={handleChannelChange}
         />
         <About content={about} />
       </main>

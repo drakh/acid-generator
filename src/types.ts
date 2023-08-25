@@ -17,10 +17,13 @@ export type Pattern = {
 
 export type InternalSynth = 'internal';
 
-export type SequencerOutput<
-  T extends MIDIOutput | InternalSynth = MIDIOutput | InternalSynth,
-> = {
-  output: T;
+export type SequencerOutput = {
+  port: MIDIOutput;
   selected: boolean;
-  channel: T extends MIDIOutput ? number : null;
+  channel: number;
 };
+
+export enum DIRECTION {
+  LEFT = 'left',
+  RIGHT = 'right',
+}

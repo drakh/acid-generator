@@ -7,17 +7,12 @@ import {
 import dockerNames from 'docker-names-ts';
 import { concat } from 'lodash';
 import { generate, type SequenceStep } from '../audio-engine/generator';
-import { BASE_NOTE, DEFAULTS, internalSynth } from '../constants';
+import { BASE_NOTE, DEFAULTS } from '../constants';
 import { type SCALE } from '../audio-engine/scales';
 import { storage } from '../localStorage';
-import { type Pattern, type SequencerOutput } from '../types';
+import { DIRECTION, type Pattern, type SequencerOutput } from '../types';
 
 const { sequencer: { name, pattern, storedPatterns, scale } = {} } = storage;
-
-enum DIRECTION {
-  LEFT = 'left',
-  RIGHT = 'right',
-}
 
 interface State extends Pattern {
   storedPatterns: Pattern[];
@@ -45,7 +40,7 @@ const initialState: State = {
     gate: 0.8,
     output: {
       midi: null,
-      outputs: [{ output: internalSynth, selected: true, channel: null }],
+      outputs: [],
     },
   },
   storedPatterns: storedPatterns || [],
@@ -60,7 +55,9 @@ interface Reducers extends SliceCaseReducers<State> {
   loadPattern: CaseReducer<State, PayloadAction<number>>;
   deletePattern: CaseReducer<State, PayloadAction<number>>;
   setMidiInterface: CaseReducer<State, PayloadAction<MIDIAccess>>;
-  addMidiOutput: CaseReducer<State, PayloadAction<SequencerOutput<MIDIOutput>>>;
+  addMidiOutput: CaseReducer<State, PayloadAction<SequencerOutput>>;
+  selectOutput: CaseReducer<State, PayloadAction<string | undefined>>;
+  setMidiChannel: CaseReducer<State, PayloadAction<{ id: string; channel: number }>>;
 }
 
 const slice = createSlice<State, Reducers>({
@@ -145,9 +142,7 @@ const slice = createSlice<State, Reducers>({
           output: { outputs },
         },
       } = state;
-      const includesPort = outputs.find(
-        ({ output: out }) => out !== internalSynth && out.id === payload.output.id,
-      );
+      const includesPort = outputs.find(({ port }) => port.id === payload.port.id);
       return {
         ...state,
         options: {
@@ -155,6 +150,59 @@ const slice = createSlice<State, Reducers>({
           output: {
             ...output,
             outputs: includesPort ? outputs : [...outputs, payload],
+          },
+        },
+      };
+    },
+    selectOutput: (state, { payload }) => {
+      const {
+        options,
+        options: { output },
+        options: {
+          output: { outputs },
+        },
+      } = state;
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            outputs: outputs.map((out) => {
+              const {
+                port: { id },
+              } = out;
+              return {
+                ...out,
+                selected: id === payload,
+              };
+            }),
+          },
+        },
+      };
+    },
+    setMidiChannel: (state, { payload: { id, channel } }) => {
+      const {
+        options,
+        options: { output },
+        options: {
+          output: { outputs },
+        },
+      } = state;
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            outputs: outputs.map((out) => {
+              const { port } = out;
+              if (port.id !== id) return out;
+              return {
+                ...out,
+                channel,
+              };
+            }),
           },
         },
       };
@@ -174,6 +222,8 @@ const {
     deletePattern,
     addMidiOutput,
     setMidiInterface,
+    selectOutput,
+    setMidiChannel,
   },
   reducer,
 } = slice;
@@ -184,12 +234,13 @@ export {
   setScale,
   setName,
   shiftPattern,
-  DIRECTION,
   storePattern,
   loadPattern,
   deletePattern,
   addMidiOutput,
   setMidiInterface,
+  selectOutput,
+  setMidiChannel,
 };
 export type { State as SequencerState };
 export default reducer;
