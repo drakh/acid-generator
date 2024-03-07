@@ -26,7 +26,6 @@ Hit **G** on your keyboard, or click the **SMILE** to generate new sequence.
 
 ### TODO
 
-- output via MIDI, so you can control real synths
 - euclidean mode
 - find out the format of Polyend Play fills to make exports for it possible. 
 - ?

@@ -1,13 +1,14 @@
 import { SCALE } from './audio-engine/scales.ts';
+import { type InternalSynth } from './types.ts';
 
 type Range = {
   MIN: number;
   MAX: number;
 };
 
-const BASE_NOTE = 48;
+export const BASE_NOTE = 48;
 
-const DEFAULTS = {
+export const DEFAULTS = {
   BPM: 120,
   SCALE: SCALE.PHRYGIAN,
   SEQ_LENGTH: 16,
@@ -16,24 +17,24 @@ const DEFAULTS = {
   RESONANCE: 3,
 };
 
-const CUTOFF: Range = {
+export const CUTOFF: Range = {
   MIN: 110,
   MAX: 880,
 };
 
-const RES: Range = {
+export const RES: Range = {
   MIN: 0,
   MAX: 9,
 };
 
-const BPM: Range = {
+export const BPM: Range = {
   MIN: 30,
   MAX: 240,
 };
 
-const DELAY_SEND: Range = {
+export const DELAY_SEND: Range = {
   MIN: -80,
   MAX: -1,
 };
 
-export { DEFAULTS, BASE_NOTE, BPM, CUTOFF, RES, DELAY_SEND };
+export const internalSynth: InternalSynth = 'internal';

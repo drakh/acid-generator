@@ -10,38 +10,40 @@ import { generate, type SequenceStep } from '../audio-engine/generator';
 import { BASE_NOTE, DEFAULTS } from '../constants';
 import { type SCALE } from '../audio-engine/scales';
 import { storage } from '../localStorage';
-import { type Pattern } from '../types';
+import { DIRECTION, type Pattern, type SequencerOutput } from '../types';
 
-const { sequencer = {} } = storage;
-
-enum DIRECTION {
-  LEFT = 'left',
-  RIGHT = 'right',
-}
+const { sequencer: { name, pattern, storedPatterns, scale } = {} } = storage;
 
 interface State extends Pattern {
   storedPatterns: Pattern[];
   options: {
     baseNote: number;
     gate: number;
+    output: { midi: MIDIAccess | null; outputs: SequencerOutput[] };
   };
 }
 
 const initialState: State = {
-  pattern: generate({
-    patternLength: DEFAULTS.SEQ_LENGTH,
-    spread: 100,
-    density: 100,
-    accentsDensity: 50,
-    slidesDensity: 50,
-  }),
-  name: dockerNames.getRandomName(),
-  scale: DEFAULTS.SCALE,
+  pattern:
+    pattern ||
+    generate({
+      patternLength: DEFAULTS.SEQ_LENGTH,
+      spread: 100,
+      density: 100,
+      accentsDensity: 50,
+      slidesDensity: 50,
+    }),
+  name: name || dockerNames.getRandomName(),
+  scale: scale || DEFAULTS.SCALE,
   options: {
     baseNote: BASE_NOTE,
     gate: 0.8,
+    output: {
+      midi: null,
+      outputs: [],
+    },
   },
-  storedPatterns: [],
+  storedPatterns: storedPatterns || [],
 };
 
 interface Reducers extends SliceCaseReducers<State> {
@@ -52,13 +54,17 @@ interface Reducers extends SliceCaseReducers<State> {
   storePattern: CaseReducer<State, PayloadAction<Pattern>>;
   loadPattern: CaseReducer<State, PayloadAction<number>>;
   deletePattern: CaseReducer<State, PayloadAction<number>>;
+  setMidiInterface: CaseReducer<State, PayloadAction<MIDIAccess>>;
+  addMidiOutput: CaseReducer<State, PayloadAction<SequencerOutput>>;
+  removeMidiOutput: CaseReducer<State, PayloadAction<SequencerOutput>>;
+  selectOutput: CaseReducer<State, PayloadAction<string | undefined>>;
+  setMidiChannel: CaseReducer<State, PayloadAction<{ id: string; channel: number }>>;
 }
 
 const slice = createSlice<State, Reducers>({
   name: 'pattern',
   initialState: {
     ...initialState,
-    ...sequencer,
   },
   reducers: {
     setPattern: (state, { payload }) => {
@@ -113,6 +119,114 @@ const slice = createSlice<State, Reducers>({
         storedPatterns: storedPatterns.filter((_p, i) => i !== payload),
       };
     },
+    setMidiInterface: (state, { payload }) => {
+      const {
+        options,
+        options: { output },
+      } = state;
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            midi: payload,
+          },
+        },
+      };
+    },
+    addMidiOutput: (state, { payload }) => {
+      const {
+        options,
+        options: { output },
+        options: {
+          output: { outputs },
+        },
+      } = state;
+      const includesPort = outputs.find(({ port }) => port.id === payload.port.id);
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            outputs: includesPort ? outputs : [...outputs, payload],
+          },
+        },
+      };
+    },
+    removeMidiOutput: (state, { payload }) => {
+      const {
+        options,
+        options: { output },
+        options: {
+          output: { outputs },
+        },
+      } = state;
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            outputs: outputs.filter((output) => output.port.id !== payload.port.id),
+          },
+        },
+      };
+    },
+    selectOutput: (state, { payload }) => {
+      const {
+        options,
+        options: { output },
+        options: {
+          output: { outputs },
+        },
+      } = state;
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            outputs: outputs.map((out) => {
+              const {
+                port: { id },
+              } = out;
+              return {
+                ...out,
+                selected: id === payload,
+              };
+            }),
+          },
+        },
+      };
+    },
+    setMidiChannel: (state, { payload: { id, channel } }) => {
+      const {
+        options,
+        options: { output },
+        options: {
+          output: { outputs },
+        },
+      } = state;
+      return {
+        ...state,
+        options: {
+          ...options,
+          output: {
+            ...output,
+            outputs: outputs.map((out) => {
+              const { port } = out;
+              if (port.id !== id) return out;
+              return {
+                ...out,
+                channel,
+              };
+            }),
+          },
+        },
+      };
+    },
   },
 });
 
@@ -126,6 +240,11 @@ const {
     storePattern,
     loadPattern,
     deletePattern,
+    addMidiOutput,
+    setMidiInterface,
+    selectOutput,
+    setMidiChannel,
+    removeMidiOutput,
   },
   reducer,
 } = slice;
@@ -136,10 +255,14 @@ export {
   setScale,
   setName,
   shiftPattern,
-  DIRECTION,
   storePattern,
   loadPattern,
   deletePattern,
+  addMidiOutput,
+  setMidiInterface,
+  selectOutput,
+  setMidiChannel,
+  removeMidiOutput,
 };
 export type { State as SequencerState };
 export default reducer;

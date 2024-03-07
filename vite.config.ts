@@ -8,6 +8,6 @@ export default defineConfig({
     'process.env': process.env,
   },
   assetsInclude: ['**/*.md'],
-  plugins: [react(), eslint()],
+  plugins: [react(), eslint({ fix: true })],
   base: '',
 });

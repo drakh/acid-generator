@@ -7,12 +7,14 @@ import {
   changeTempo,
   downloadPattern,
   generatePattern,
+  stopInternalSynth,
   toggleTransport,
 } from './audio-engine/controls';
 import { type SCALE } from './audio-engine/scales';
 import GeneratorControls from './components/GeneratorControls';
 import Sequencer from './components/Sequencer';
 import About from './components/About';
+import StoredPatterns from './components/StoredPatterns';
 import {
   setAccentDensity,
   setDensity,
@@ -22,43 +24,39 @@ import {
 } from './store/generator';
 import {
   deletePattern,
-  DIRECTION,
   loadPattern,
+  selectOutput,
+  setMidiChannel,
   setScale,
   shiftPattern,
   storePattern,
 } from './store/sequencer';
-import { type State } from './store/types';
+import { type State } from './store';
+import { DIRECTION } from './types';
+import {
+  getMidiAccess,
+  midiStateChangeEventListener,
+} from './audio-engine/midi-output.ts';
 
 import styles from './App.module.less';
 
+// eslint-disable-next-line import/no-unresolved
 import about from '../README.md?raw';
-import StoredPatterns from './components/StoredPatterns.tsx';
 
 const App: FC = () => {
-  useEffect(() => {
-    const getMidi = async () => {
-      try {
-        const midi = await window.navigator.requestMIDIAccess();
-        // midi.addEventListener('onstatechange',()=>{
-        //
-        // })
-        // midi.addEventListener('statechange', (ev) => {
-        //   console.info({ ev });
-        // });
-        midi.outputs.forEach(() => {
-          // console.info(parseInt(String(9), 16).toString(16));
-          // console.info({ out });
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    void getMidi();
-  }, []);
+  const dispatch = useDispatch();
+
   const {
     transport: { currentStep, tempo, playing },
-    sequencer: { pattern, scale, name, storedPatterns },
+    sequencer: {
+      pattern,
+      scale,
+      name,
+      storedPatterns,
+      options: {
+        output: { outputs, midi },
+      },
+    },
     generator: {
       dispatchGenerate,
       density,
@@ -72,7 +70,17 @@ const App: FC = () => {
     return state;
   });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    void getMidiAccess();
+  }, []);
+
+  useEffect(() => {
+    midi?.addEventListener('statechange', midiStateChangeEventListener);
+    return () => {
+      console.info('remove listener');
+      midi?.removeEventListener('statechange', midiStateChangeEventListener);
+    };
+  }, [midi]);
 
   const handleGenerateClick = useCallback(() => {
     generatePattern();
@@ -159,6 +167,21 @@ const App: FC = () => {
     [storedPatterns],
   );
 
+  const handleOutputChange = useCallback(
+    (id: string | undefined) => {
+      stopInternalSynth();
+      dispatch(selectOutput(id));
+    },
+    [dispatch],
+  );
+
+  const handleChannelChange = useCallback(
+    (channel: number, id: string) => {
+      dispatch(setMidiChannel({ channel, id }));
+    },
+    [dispatch],
+  );
+
   return (
     <>
       <main className={`mainPart ${styles.main}`}>
@@ -196,6 +219,9 @@ const App: FC = () => {
           onShiftLeftClick={handleShiftLeftClick}
           onShiftRightClick={handleShiftRightClick}
           onPatternStoreClick={handlePatternStoreClick}
+          outputs={outputs}
+          onOutputChange={handleOutputChange}
+          onChannelChange={handleChannelChange}
         />
         <About content={about} />
       </main>

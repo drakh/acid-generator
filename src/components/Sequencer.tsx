@@ -1,8 +1,9 @@
-import { type FC } from 'react';
+import { type FC, useMemo } from 'react';
 import Footer, { type Props as FooterProps } from './sequencer/Footer';
 import Header, { type Props as HeaderProps } from './sequencer/Header';
 import PianoRoll, { type Props as PianoRollProps } from './sequencer/PianoRoll';
 import Controls, { type Props as ControlsProps } from './sequencer/Controls';
+import { getOutput } from '../utils';
 
 import styles from './Sequencer.module.less';
 
@@ -28,7 +29,11 @@ const Sequencer: FC<Props> = ({
   onShiftRightClick,
   onShiftLeftClick,
   onPatternStoreClick,
+  outputs,
+  onOutputChange,
+  onChannelChange,
 }) => {
+  const output = useMemo(() => getOutput(outputs), [outputs]);
   return (
     <section className={styles.sequencer}>
       <header>
@@ -46,7 +51,12 @@ const Sequencer: FC<Props> = ({
         </div>
       </main>
       <footer>
-        <Footer scaleName={scaleName} onScaleChange={onScaleChange} />
+        <Footer
+          scaleName={scaleName}
+          onScaleChange={onScaleChange}
+          outputs={outputs}
+          onOutputChange={onOutputChange}
+        />
         <Controls
           resonance={resonance}
           cutoff={cutoff}
@@ -58,6 +68,8 @@ const Sequencer: FC<Props> = ({
           onTempoChange={onTempoChange}
           tempo={tempo}
           playing={playing}
+          output={output}
+          onChannelChange={onChannelChange}
         />
       </footer>
     </section>
