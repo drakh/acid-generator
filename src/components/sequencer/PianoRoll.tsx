@@ -55,15 +55,19 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
                 onClick={() => switchToNextStep('octave', pattern, i)}
                 className={`${styles.cell} ${
                   octave === 1 ? styles.octaveUp : octave === -1 ? styles.octaveDown : ''
-                }`}
+                } ${styles.canEdit}`}
               />
               <li
                 onClick={() => switchToNextStep('slide', pattern, i)}
-                className={`${styles.cell} ${slide ? styles.slide : ''}`}
+                className={`${styles.cell} ${slide ? styles.slide : ''} ${
+                  styles.canEdit
+                }`}
               />
               <li
                 onClick={() => switchToNextStep('accent', pattern, i)}
-                className={`${styles.cell} ${accent ? styles.accent : ''}`}
+                className={`${styles.cell} ${accent ? styles.accent : ''} ${
+                  styles.canEdit
+                }`}
               />
               <li className={styles.cell}>{i + 1}</li>
             </ul>
