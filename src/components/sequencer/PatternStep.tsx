@@ -3,6 +3,7 @@ import { SCALE, SCALES } from '../../audio-engine/scales';
 import { getNoteInScale } from '../../utils';
 
 import styles from './PatternStep.module.less';
+import { noteMatchScale } from '../../audio-engine/editors';
 
 const OCTAVE = 12;
 const NOTES = Array(OCTAVE).fill(1);
@@ -14,7 +15,8 @@ const PatternStep: FC<{
   accent: boolean | null;
   slide: boolean | null;
   highlightScale: boolean;
-}> = ({ note, scaleName, highlightScale, accent, slide }) => {
+  setNote?: (v: number) => void;
+}> = ({ note, scaleName, highlightScale, accent, slide, setNote }) => {
   const scale = SCALES[scaleName];
   return (
     <ul className={styles.pianoRoll}>
@@ -22,11 +24,14 @@ const PatternStep: FC<{
         const r = i % OCTAVE;
         return (
           <li
+            onClick={() => (setNote ? setNote(i) : false)}
             className={`${styles.key} ${
               highlightScale && scale.includes(r) ? styles.inkey : ''
             } ${highlightScale && WHITE_KEYS.includes(r) ? styles.white : styles.black} ${
               getNoteInScale(note, scaleName) === i ? styles.active : ''
-            } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''}`}
+            } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''} ${
+              noteMatchScale(i, scaleName) ? styles.canEdit : styles.cannotEdit
+            }`}
             key={`piano-roll-${i}`}
           />
         );
