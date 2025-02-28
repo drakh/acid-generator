@@ -42,4 +42,41 @@ const editNoteInPattern = (
   }
 };
 
-export { noteMatchScale, getNotePositionInScale, editNoteInPattern };
+const getNextStep = (
+  action: 'octave' | 'accent' | 'slide',
+  patternStep: SequenceStep,
+) => {
+  switch (action) {
+    case 'octave': {
+      const steps = [-1, 0, 1];
+      const currentIndex = steps.indexOf(patternStep[action] as number);
+      return steps[(currentIndex + 1) % steps.length];
+    }
+    case 'accent':
+    case 'slide':
+      return !patternStep[action];
+  }
+};
+
+const switchToNextStep = (
+  action: 'octave' | 'accent' | 'slide',
+  pattern: SequenceStep[],
+  currentStep: number,
+) => {
+  const modifiedPattern: SequenceStep[] = [];
+  for (let step = 0; step < pattern.length; step++) {
+    if (step === currentStep) {
+      const actionNextStep = getNextStep(action, pattern[step]);
+      const newSequenceStep: SequenceStep = {
+        ...pattern[step],
+        [action]: actionNextStep,
+      };
+      modifiedPattern.push(newSequenceStep);
+    } else {
+      modifiedPattern.push(pattern[step]);
+    }
+  }
+  dispatch(setPattern(modifiedPattern));
+};
+
+export { noteMatchScale, getNotePositionInScale, editNoteInPattern, switchToNextStep };

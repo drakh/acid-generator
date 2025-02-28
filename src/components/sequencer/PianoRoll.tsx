@@ -4,7 +4,7 @@ import { type SCALE } from '../../audio-engine/scales';
 import PatternStep from './PatternStep';
 
 import styles from './PianoRoll.module.less';
-import { editNoteInPattern } from '../../audio-engine/editors';
+import { editNoteInPattern, switchToNextStep } from '../../audio-engine/editors';
 
 interface Props {
   pattern: SequenceStep[];
@@ -52,12 +52,19 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
                 />
               </li>
               <li
+                onClick={() => switchToNextStep('octave', pattern, i)}
                 className={`${styles.cell} ${
                   octave === 1 ? styles.octaveUp : octave === -1 ? styles.octaveDown : ''
                 }`}
               />
-              <li className={`${styles.cell} ${slide ? styles.slide : ''}`} />
-              <li className={`${styles.cell} ${accent ? styles.accent : ''}`} />
+              <li
+                onClick={() => switchToNextStep('slide', pattern, i)}
+                className={`${styles.cell} ${slide ? styles.slide : ''}`}
+              />
+              <li
+                onClick={() => switchToNextStep('accent', pattern, i)}
+                className={`${styles.cell} ${accent ? styles.accent : ''}`}
+              />
               <li className={styles.cell}>{i + 1}</li>
             </ul>
           </li>
