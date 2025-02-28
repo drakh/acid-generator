@@ -3,16 +3,11 @@ import { SCALE, SCALES } from '../../audio-engine/scales';
 import { getNoteInScale } from '../../utils';
 
 import styles from './PatternStep.module.less';
+import { noteMatchScale } from '../../audio-engine/editors';
 
 const OCTAVE = 12;
 const NOTES = Array(OCTAVE).fill(1);
 const WHITE_KEYS = SCALES[SCALE.MAJOR];
-
-const editMouseOver = (note: number, scaleName: SCALE) => {
-  const notePositionInScale = SCALES[scaleName].findIndex((v) => v === note);
-  const noteInScale = getNoteInScale(notePositionInScale, scaleName);
-  return noteInScale === note ? styles.canEdit : styles.cannotEdit;
-};
 
 const PatternStep: FC<{
   note: number | null;
@@ -34,10 +29,9 @@ const PatternStep: FC<{
               highlightScale && scale.includes(r) ? styles.inkey : ''
             } ${highlightScale && WHITE_KEYS.includes(r) ? styles.white : styles.black} ${
               getNoteInScale(note, scaleName) === i ? styles.active : ''
-            } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''} ${editMouseOver(
-              i,
-              scaleName,
-            )}`}
+            } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''} ${
+              noteMatchScale(i, scaleName) ? styles.canEdit : styles.cannotEdit
+            }`}
             key={`piano-roll-${i}`}
           />
         );
