@@ -1,9 +1,13 @@
 import { type FC } from 'react';
 import { type SequenceStep } from '../../audio-engine/generator';
-import { type SCALE } from '../../audio-engine/scales';
+import { SCALES, type SCALE } from '../../audio-engine/scales';
 import PatternStep from './PatternStep';
 
 import styles from './PianoRoll.module.less';
+import { setPattern } from '../../store/sequencer';
+import { store } from '../../store';
+import { getNoteInScale } from '../../utils';
+const { dispatch } = store;
 
 interface Props {
   pattern: SequenceStep[];
@@ -45,6 +49,30 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
                   accent={accent}
                   slide={slide}
                   highlightScale={false}
+                  setNote={(newNote) => {
+                    const notePositionInScale = SCALES[scaleName].findIndex(
+                      (v) => v === newNote,
+                    );
+                    const noteInScale = getNoteInScale(notePositionInScale, scaleName);
+                    if (noteInScale === newNote) {
+                      const modifiedPattern: SequenceStep[] = [];
+                      for (let step = 0; step < pattern.length; step++) {
+                        if (step === i) {
+                          const deleting = notePositionInScale === pattern[step].note;
+                          const newSequenceStep: SequenceStep = {
+                            note: deleting ? null : notePositionInScale,
+                            octave: pattern[step].octave ?? 0,
+                            accent: pattern[step].accent ?? false,
+                            slide: pattern[step].slide ?? false,
+                          };
+                          modifiedPattern.push(newSequenceStep);
+                        } else {
+                          modifiedPattern.push(pattern[step]);
+                        }
+                      }
+                      dispatch(setPattern(modifiedPattern));
+                    }
+                  }}
                 />
               </li>
               <li

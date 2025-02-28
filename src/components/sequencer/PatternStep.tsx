@@ -8,13 +8,20 @@ const OCTAVE = 12;
 const NOTES = Array(OCTAVE).fill(1);
 const WHITE_KEYS = SCALES[SCALE.MAJOR];
 
+const editMouseOver = (note: number, scaleName: SCALE) => {
+  const notePositionInScale = SCALES[scaleName].findIndex((v) => v === note);
+  const noteInScale = getNoteInScale(notePositionInScale, scaleName);
+  return noteInScale === note ? styles.canEdit : styles.cannotEdit;
+};
+
 const PatternStep: FC<{
   note: number | null;
   scaleName: SCALE;
   accent: boolean | null;
   slide: boolean | null;
   highlightScale: boolean;
-}> = ({ note, scaleName, highlightScale, accent, slide }) => {
+  setNote?: (v: number) => void;
+}> = ({ note, scaleName, highlightScale, accent, slide, setNote }) => {
   const scale = SCALES[scaleName];
   return (
     <ul className={styles.pianoRoll}>
@@ -22,11 +29,15 @@ const PatternStep: FC<{
         const r = i % OCTAVE;
         return (
           <li
+            onClick={() => (setNote ? setNote(i) : false)}
             className={`${styles.key} ${
               highlightScale && scale.includes(r) ? styles.inkey : ''
             } ${highlightScale && WHITE_KEYS.includes(r) ? styles.white : styles.black} ${
               getNoteInScale(note, scaleName) === i ? styles.active : ''
-            } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''}`}
+            } ${accent ? styles.accent : ''} ${slide ? styles.slide : ''} ${editMouseOver(
+              i,
+              scaleName,
+            )}`}
             key={`piano-roll-${i}`}
           />
         );
