@@ -1,7 +1,7 @@
 import { random } from 'lodash';
 import { type Unit } from 'tone';
-// import { getPattern } from 'euclidean-rhythms';
 import { arrayRand } from '../utils';
+import { type EuclideanParams, getEuclideanSteps } from './euclidean';
 
 const scale = Array(7)
   .fill(0)
@@ -22,6 +22,7 @@ interface GeneratorParams {
   spread: number;
   accentsDensity: number;
   slidesDensity: number;
+  euclidean?: EuclideanParams;
 }
 
 const generate = ({
@@ -30,15 +31,19 @@ const generate = ({
   spread,
   accentsDensity,
   slidesDensity,
+  euclidean,
 }: GeneratorParams): SequenceStep[] => {
   const elements = Array(patternLength)
     .fill(0)
     .map((_v, i) => i);
 
   const seqDensity = Math.round(patternLength * (density / 100));
-  const notesToGenerate = random(Math.round(seqDensity / 2), seqDensity);
+  const euclideanSteps = euclidean && getEuclideanSteps(euclidean, patternLength);
+  const notesToGenerate = euclideanSteps
+    ? euclideanSteps.length
+    : random(Math.round(seqDensity / 2), seqDensity);
 
-  const selectedSteps = arrayRand(elements, notesToGenerate);
+  const selectedSteps = euclideanSteps || arrayRand(elements, notesToGenerate);
 
   const accents = arrayRand(
     selectedSteps,
@@ -74,8 +79,6 @@ const generate = ({
       slide: slides.includes(v),
     } as SequenceStep<Unit.Note>;
   });
-  // const p = getPattern(7, 16);
-  // console.info({ p });
   return out;
 };
 

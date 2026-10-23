@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type ChangeEvent, type FC, useCallback } from 'react';
 import { AcidIcon, AcidWaitingToHitIcon } from './Icons';
 import { DEFAULTS } from '../constants';
 import Knob from './Knob';
@@ -13,6 +13,10 @@ const GeneratorControls: FC<{
   accentsDensity: number;
   slidesDensity: number;
   waiting: boolean;
+  euclidean: boolean;
+  euclideanPulses: number;
+  euclideanSteps: number;
+  euclideanRotate: number;
 
   onGenerateClick: () => void;
   onPatternLengthChange: (v: number) => void;
@@ -20,6 +24,10 @@ const GeneratorControls: FC<{
   onSpreadChange: (v: number) => void;
   onAccentsChange: (v: number) => void;
   onSlidesChange: (v: number) => void;
+  onEuclideanChange: (v: boolean) => void;
+  onEuclideanPulsesChange: (v: number) => void;
+  onEuclideanStepsChange: (v: number) => void;
+  onEuclideanRotateChange: (v: number) => void;
 }> = ({
   patternLength,
   density,
@@ -27,13 +35,26 @@ const GeneratorControls: FC<{
   accentsDensity,
   slidesDensity,
   waiting,
+  euclidean,
+  euclideanPulses,
+  euclideanSteps,
+  euclideanRotate,
   onGenerateClick,
   onSpreadChange,
   onDensityChange,
   onPatternLengthChange,
   onAccentsChange,
   onSlidesChange,
+  onEuclideanChange,
+  onEuclideanPulsesChange,
+  onEuclideanStepsChange,
+  onEuclideanRotateChange,
 }) => {
+  const handleEuclideanChange = useCallback(
+    ({ currentTarget: { checked } }: ChangeEvent<HTMLInputElement>) =>
+      onEuclideanChange(checked),
+    [onEuclideanChange],
+  );
   return (
     <nav className={styles.controls}>
       <Button
@@ -105,6 +126,52 @@ const GeneratorControls: FC<{
           />
         </li>
       </ul>
+      <aside>
+        <label title="Place the notes on a Euclidean rhythm instead of random steps. DENSITY is ignored.">
+          <input type="checkbox" checked={euclidean} onChange={handleEuclideanChange} />
+          EUCLIDEAN MODE
+        </label>
+        {euclidean && (
+          <ul>
+            <li>
+              <Knob
+                onChange={onEuclideanPulsesChange}
+                min={1}
+                max={euclideanSteps}
+                defaultValue={7}
+                value={euclideanPulses}
+                direction={'vertical'}
+                step={1}
+                label={'PULSES'}
+              />
+            </li>
+            <li>
+              <Knob
+                onChange={onEuclideanStepsChange}
+                min={2}
+                max={64}
+                defaultValue={DEFAULTS.SEQ_LENGTH}
+                value={euclideanSteps}
+                direction={'vertical'}
+                step={1}
+                label={'STEPS'}
+              />
+            </li>
+            <li>
+              <Knob
+                onChange={onEuclideanRotateChange}
+                min={0}
+                max={euclideanSteps - 1}
+                defaultValue={0}
+                value={euclideanRotate}
+                direction={'vertical'}
+                step={1}
+                label={'ROTATE'}
+              />
+            </li>
+          </ul>
+        )}
+      </aside>
       {/*<aside>*/}
       {/*  <label>*/}
       {/*    <input type="checkbox" />*/}

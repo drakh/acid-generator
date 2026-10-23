@@ -24,8 +24,9 @@ Hit **space** to start playing the sequence.
 
 Hit **G** on your keyboard, or click the **SMILE** to generate new sequence.
 
+Tick **EUCLIDEAN MODE** to place the notes on a Euclidean rhythm instead of random steps: **PULSES** notes are spread as evenly as possible over **STEPS** steps (repeated to fill the pattern length) and **ROTATE** shifts the rhythm. **DENSITY** is ignored in this mode.
+
 ### TODO
 
-- euclidean mode
 - find out the format of Polyend Play fills to make exports for it possible. 
 - ?

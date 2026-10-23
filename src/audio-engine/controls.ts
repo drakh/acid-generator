@@ -59,7 +59,17 @@ const getNextStep = (step: number, maxSteps: number): number => {
 const generatePattern = (force = false) => {
   const {
     transport: { playing },
-    generator: { patternLength, density, spread, accentsDensity, slidesDensity },
+    generator: {
+      patternLength,
+      density,
+      spread,
+      accentsDensity,
+      slidesDensity,
+      euclidean,
+      euclideanPulses,
+      euclideanSteps,
+      euclideanRotate,
+    },
   } = store.getState();
   if (playing && !force) {
     dispatch(setGenerate(true));
@@ -69,7 +79,20 @@ const generatePattern = (force = false) => {
   dispatch(setName(dockerNames.getRandomName()));
   dispatch(
     setPattern(
-      generate({ patternLength, density, spread, accentsDensity, slidesDensity }),
+      generate({
+        patternLength,
+        density,
+        spread,
+        accentsDensity,
+        slidesDensity,
+        euclidean: euclidean
+          ? {
+              pulses: euclideanPulses,
+              steps: euclideanSteps,
+              rotate: euclideanRotate,
+            }
+          : undefined,
+      }),
     ),
   );
   return;

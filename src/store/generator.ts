@@ -18,6 +18,10 @@ interface State {
   slidesDensity: number;
   startWithNote: boolean;
   startWithAccent: boolean;
+  euclidean: boolean;
+  euclideanPulses: number;
+  euclideanSteps: number;
+  euclideanRotate: number;
 }
 
 interface Reducers extends SliceCaseReducers<State> {
@@ -27,6 +31,10 @@ interface Reducers extends SliceCaseReducers<State> {
   setSpread: CaseReducer<State, PayloadAction<number>>;
   setAccentDensity: CaseReducer<State, PayloadAction<number>>;
   setSlidesDensity: CaseReducer<State, PayloadAction<number>>;
+  setEuclidean: CaseReducer<State, PayloadAction<boolean>>;
+  setEuclideanPulses: CaseReducer<State, PayloadAction<number>>;
+  setEuclideanSteps: CaseReducer<State, PayloadAction<number>>;
+  setEuclideanRotate: CaseReducer<State, PayloadAction<number>>;
 }
 
 const initialState: State = {
@@ -38,6 +46,10 @@ const initialState: State = {
   slidesDensity: 50,
   startWithAccent: false,
   startWithNote: false,
+  euclidean: false,
+  euclideanPulses: 7,
+  euclideanSteps: 16,
+  euclideanRotate: 0,
 };
 
 const slice = createSlice<State, Reducers>({
@@ -84,6 +96,32 @@ const slice = createSlice<State, Reducers>({
         slidesDensity: payload,
       };
     },
+    setEuclidean: (state, { payload }) => {
+      return {
+        ...state,
+        euclidean: payload,
+      };
+    },
+    setEuclideanPulses: (state, { payload }) => {
+      return {
+        ...state,
+        euclideanPulses: Math.min(payload, state.euclideanSteps),
+      };
+    },
+    setEuclideanSteps: (state, { payload }) => {
+      return {
+        ...state,
+        euclideanSteps: payload,
+        euclideanPulses: Math.min(state.euclideanPulses, payload),
+        euclideanRotate: Math.min(state.euclideanRotate, payload - 1),
+      };
+    },
+    setEuclideanRotate: (state, { payload }) => {
+      return {
+        ...state,
+        euclideanRotate: Math.min(payload, state.euclideanSteps - 1),
+      };
+    },
   },
 });
 
@@ -95,6 +133,10 @@ const {
     setSpread,
     setAccentDensity,
     setSlidesDensity,
+    setEuclidean,
+    setEuclideanPulses,
+    setEuclideanSteps,
+    setEuclideanRotate,
   },
   reducer,
 } = slice;
@@ -106,6 +148,10 @@ export {
   setSpread,
   setAccentDensity,
   setSlidesDensity,
+  setEuclidean,
+  setEuclideanPulses,
+  setEuclideanSteps,
+  setEuclideanRotate,
 };
 export type { State as GeneratorState };
 export default reducer;

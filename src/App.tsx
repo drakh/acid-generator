@@ -18,6 +18,10 @@ import StoredPatterns from './components/StoredPatterns';
 import {
   setAccentDensity,
   setDensity,
+  setEuclidean,
+  setEuclideanPulses,
+  setEuclideanRotate,
+  setEuclideanSteps,
   setPatternLength,
   setSlidesDensity,
   setSpread,
@@ -64,6 +68,10 @@ const App: FC = () => {
       accentsDensity,
       patternLength,
       slidesDensity,
+      euclidean,
+      euclideanPulses,
+      euclideanSteps,
+      euclideanRotate,
     },
     synth: { cutoff, resonance, delaySend },
   } = useSelector((state: State) => {
@@ -120,6 +128,31 @@ const App: FC = () => {
   const handleSlidesDensityChange = useCallback(
     (v: number) => {
       dispatch(setSlidesDensity(v));
+    },
+    [dispatch],
+  );
+
+  const handleEuclideanChange = useCallback(
+    (v: boolean) => {
+      dispatch(setEuclidean(v));
+    },
+    [dispatch],
+  );
+  const handleEuclideanPulsesChange = useCallback(
+    (v: number) => {
+      dispatch(setEuclideanPulses(v));
+    },
+    [dispatch],
+  );
+  const handleEuclideanStepsChange = useCallback(
+    (v: number) => {
+      dispatch(setEuclideanSteps(v));
+    },
+    [dispatch],
+  );
+  const handleEuclideanRotateChange = useCallback(
+    (v: number) => {
+      dispatch(setEuclideanRotate(v));
     },
     [dispatch],
   );
@@ -193,11 +226,19 @@ const App: FC = () => {
           spread={spread}
           accentsDensity={accentsDensity}
           slidesDensity={slidesDensity}
+          euclidean={euclidean}
+          euclideanPulses={euclideanPulses}
+          euclideanSteps={euclideanSteps}
+          euclideanRotate={euclideanRotate}
           onPatternLengthChange={handlePatternLengthChange}
           onSpreadChange={handleSpreadChange}
           onDensityChange={handleDensityChange}
           onAccentsChange={handleAccentsDensityChange}
           onSlidesChange={handleSlidesDensityChange}
+          onEuclideanChange={handleEuclideanChange}
+          onEuclideanPulsesChange={handleEuclideanPulsesChange}
+          onEuclideanStepsChange={handleEuclideanStepsChange}
+          onEuclideanRotateChange={handleEuclideanRotateChange}
         />
         <Sequencer
           onDownloadClick={handleDownloadSequencerPatternb}
